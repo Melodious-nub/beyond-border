@@ -58,7 +58,8 @@ A professional Express.js backend application for website maintenance management
      ```
 
 4. **Environment Configuration**
-   - Copy `.env` file and update the values:
+   - The `.env` file is included in the repository with default values
+   - For production, update the values as needed:
      ```env
      # Database Configuration
      DB_HOST=localhost
