@@ -5,7 +5,7 @@ node_modules/
 logs
 *.log
 
-# Environment variables (but allow .env for development)
+# Environment variables (allow .env for development and git)
 # .env
 
 # IDE files
