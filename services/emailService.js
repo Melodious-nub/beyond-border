@@ -234,16 +234,16 @@ class EmailService {
       const notificationEmails = await NotificationEmail.findAll();
       
       if (notificationEmails.length === 0) {
-        // Fallback to environment variable if no emails in database
-        const defaultEmail = process.env.NOTIFICATION_EMAILS || 'shawon.taluckder2@gmail.com';
+        // Use environment variable if no emails in database
+        const defaultEmail = process.env.NOTIFICATION_EMAILS;
         return [defaultEmail];
       }
       
       return notificationEmails.map(email => email.email);
     } catch (error) {
       console.error('Error getting notification emails:', error);
-      // Fallback to environment variable
-      const defaultEmail = process.env.NOTIFICATION_EMAILS || 'shawon.taluckder2@gmail.com';
+      // Use environment variable
+      const defaultEmail = process.env.NOTIFICATION_EMAILS;
       return [defaultEmail];
     }
   }
