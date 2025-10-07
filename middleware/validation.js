@@ -55,8 +55,37 @@ const validateProfileUpdate = [
     .withMessage('Please provide a valid email address')
 ];
 
+// Contact form validation
+const validateContactForm = [
+  body('name')
+    .trim()
+    .isLength({ min: 2, max: 100 })
+    .withMessage('Name must be between 2 and 100 characters')
+    .matches(/^[a-zA-Z\s]+$/)
+    .withMessage('Name can only contain letters and spaces'),
+  
+  body('email')
+    .isEmail()
+    .normalizeEmail()
+    .withMessage('Please provide a valid email address'),
+  
+  body('description')
+    .trim()
+    .isLength({ min: 10, max: 2000 })
+    .withMessage('Description must be between 10 and 2000 characters')
+];
+
+// Contact status update validation
+const validateContactStatusUpdate = [
+  body('status')
+    .isIn(['new', 'read', 'replied', 'closed'])
+    .withMessage('Status must be one of: new, read, replied, closed')
+];
+
 module.exports = {
   validateRegistration,
   validateLogin,
-  validateProfileUpdate
+  validateProfileUpdate,
+  validateContactForm,
+  validateContactStatusUpdate
 };

@@ -19,6 +19,16 @@ A professional Express.js backend application for website maintenance management
 - `GET /api/auth/me` - Get current user profile (Protected)
 - `PUT /api/auth/profile` - Update user profile (Protected)
 
+### Contact Form
+- `POST /api/contact` - Submit contact form (Public)
+- `GET /api/contact` - Get all contact messages with pagination (Admin)
+
+### Notification Email Management
+- `POST /api/contact/notification-emails` - Add notification email (Admin)
+- `GET /api/contact/notification-emails` - List all notification emails (Admin)
+- `DELETE /api/contact/notification-emails/{email}` - Delete notification email (Admin)
+- `POST /api/contact/test-email` - Test email configuration (Admin)
+
 ### Health Check
 - `GET /health` - Server health check
 
@@ -124,6 +134,23 @@ curl -X GET http://localhost:3000/api/auth/me \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
+### Submit contact form (Public)
+```bash
+curl -X POST http://localhost:3000/api/contact \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "description": "I would like to discuss a potential project with your team."
+  }'
+```
+
+### Get all contact messages (Admin)
+```bash
+curl -X GET http://localhost:3000/api/contact \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
 ## Project Structure
 
 ```
@@ -132,14 +159,20 @@ beyond-border-backend/
 │   ├── database.js          # Database configuration and connection
 │   └── swagger.js           # Swagger/OpenAPI documentation configuration
 ├── controllers/
-│   └── authController.js    # Authentication logic
+│   ├── authController.js    # Authentication logic
+│   └── contactController.js # Contact form logic
 ├── middleware/
 │   ├── auth.js             # JWT authentication middleware
 │   └── validation.js       # Input validation middleware
 ├── models/
-│   └── User.js             # User model and database operations
+│   ├── User.js             # User model and database operations
+│   ├── Contact.js          # Contact model and database operations
+│   └── NotificationEmail.js # Notification email management model
 ├── routes/
-│   └── auth.js             # Authentication routes with Swagger docs
+│   ├── auth.js             # Authentication routes with Swagger docs
+│   └── contact.js          # Contact form routes with Swagger docs
+├── services/
+│   └── emailService.js     # Email notification service
 ├── scripts/
 │   └── init-db.js          # Database initialization script
 ├── .env                    # Environment variables
@@ -149,6 +182,7 @@ beyond-border-backend/
 ├── package.json           # Dependencies and scripts
 ├── setup.js               # Setup script
 ├── test-api.js            # API testing script
+├── test-contact-api.js    # Contact API testing script
 └── README.md             # This file
 ```
 
@@ -183,6 +217,28 @@ CREATE TABLE users (
   role ENUM('admin', 'user') DEFAULT 'admin',
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+
+### Contacts Table
+```sql
+CREATE TABLE contacts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  status ENUM('new', 'read', 'replied', 'closed') DEFAULT 'new',
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+
+### Notification Emails Table
+```sql
+CREATE TABLE notification_emails (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
 

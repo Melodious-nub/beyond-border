@@ -47,6 +47,28 @@ const initializeDatabase = async () => {
       )
     `);
 
+        // Create contacts table
+        await promisePool.execute(`
+          CREATE TABLE IF NOT EXISTS contacts (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            description TEXT NOT NULL,
+            status ENUM('new', 'read', 'replied', 'closed') DEFAULT 'new',
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+          )
+        `);
+
+        // Create notification_emails table
+        await promisePool.execute(`
+          CREATE TABLE IF NOT EXISTS notification_emails (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            email VARCHAR(255) UNIQUE NOT NULL,
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          )
+        `);
+
     console.log('✅ Database tables created successfully');
   } catch (error) {
     console.error('❌ Database initialization failed:', error.message);

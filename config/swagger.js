@@ -242,6 +242,255 @@ const options = {
               example: 'development'
             }
           }
+        },
+        Contact: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              description: 'Contact message ID',
+              example: 1
+            },
+            name: {
+              type: 'string',
+              description: 'Contact person name',
+              example: 'John Doe',
+              minLength: 2,
+              maxLength: 100
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+              description: 'Contact person email',
+              example: 'john@example.com'
+            },
+            description: {
+              type: 'string',
+              description: 'Contact message description',
+              example: 'I would like to discuss a potential project...',
+              minLength: 10,
+              maxLength: 2000
+            },
+            status: {
+              type: 'string',
+              enum: ['new', 'read', 'replied', 'closed'],
+              description: 'Contact message status',
+              example: 'new',
+              default: 'new'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Contact message creation timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Contact message last update timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            }
+          }
+        },
+        ContactFormRequest: {
+          type: 'object',
+          required: ['name', 'email', 'description'],
+          properties: {
+            name: {
+              type: 'string',
+              description: 'Contact person name',
+              example: 'John Doe',
+              minLength: 2,
+              maxLength: 100
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+              description: 'Contact person email',
+              example: 'john@example.com'
+            },
+            description: {
+              type: 'string',
+              description: 'Contact message description',
+              example: 'I would like to discuss a potential project with your team. Please contact me at your earliest convenience.',
+              minLength: 10,
+              maxLength: 2000
+            }
+          }
+        },
+        ContactResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Contact message retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                contact: {
+                  $ref: '#/components/schemas/Contact'
+                }
+              }
+            }
+          }
+        },
+        ContactListResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Contact messages retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                contacts: {
+                  type: 'array',
+                  items: {
+                    $ref: '#/components/schemas/Contact'
+                  }
+                },
+                pagination: {
+                  type: 'object',
+                  properties: {
+                    page: {
+                      type: 'integer',
+                      example: 1
+                    },
+                    limit: {
+                      type: 'integer',
+                      example: 10
+                    },
+                    total: {
+                      type: 'integer',
+                      example: 25
+                    },
+                    pages: {
+                      type: 'integer',
+                      example: 3
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        ContactStatsResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Contact statistics retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                stats: {
+                  type: 'object',
+                  properties: {
+                    total: {
+                      type: 'integer',
+                      example: 25
+                    },
+                    new: {
+                      type: 'integer',
+                      example: 5
+                    },
+                    read: {
+                      type: 'integer',
+                      example: 10
+                    },
+                    replied: {
+                      type: 'integer',
+                      example: 8
+                    },
+                    closed: {
+                      type: 'integer',
+                      example: 2
+                    }
+                  }
+                },
+                recentContacts: {
+                  type: 'array',
+                  items: {
+                    $ref: '#/components/schemas/Contact'
+                  }
+                }
+              }
+            }
+          }
+        },
+        EmailTestResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Test email sent successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                messageId: {
+                  type: 'string',
+                  example: '<message-id@example.com>'
+                }
+              }
+            }
+          }
+        },
+        NotificationEmail: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            email: { type: 'string', format: 'email', example: 'admin@example.com' },
+            createdAt: { type: 'string', format: 'date-time', example: '2024-01-01T00:00:00.000Z' }
+          }
+        },
+        NotificationEmailResponse: {
+          type: 'object',
+          properties: {
+            success: { type: 'boolean', example: true },
+            message: { type: 'string', example: 'Notification email added successfully' },
+            data: {
+              type: 'object',
+              properties: {
+                notificationEmail: { $ref: '#/components/schemas/NotificationEmail' }
+              }
+            }
+          }
+        },
+        NotificationEmailListResponse: {
+          type: 'object',
+          properties: {
+            success: { type: 'boolean', example: true },
+            message: { type: 'string', example: 'Notification emails retrieved successfully' },
+            data: {
+              type: 'object',
+              properties: {
+                notificationEmails: {
+                  type: 'array',
+                  items: { $ref: '#/components/schemas/NotificationEmail' }
+                }
+              }
+            }
+          }
         }
       }
     },

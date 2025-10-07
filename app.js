@@ -12,6 +12,7 @@ const { swaggerUi, specs } = require('./config/swagger');
 
 // Import routes
 const authRoutes = require('./routes/auth');
+const contactRoutes = require('./routes/contact');
 
 // Create Express app
 const app = express();
@@ -99,6 +100,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
 
 // API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/contact', contactRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {
@@ -150,7 +152,7 @@ const startServer = async () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV}`);
       console.log(`🔗 Health check: http://localhost:${PORT}/health`);
-      console.log(`🔐 Auth endpoints: http://localhost:${PORT}/api/auth`);
+      console.log(`🔐 All endpoints: http://localhost:${PORT}/api-docs`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);
