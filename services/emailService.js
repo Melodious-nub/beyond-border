@@ -17,8 +17,8 @@ class EmailService {
       // You'll update this with your cPanel email credentials
       this.transporter = nodemailer.createTransport({
         host: process.env.EMAIL_HOST || 'localhost',
-        port: parseInt(process.env.EMAIL_PORT) || 465,
-        secure: process.env.EMAIL_SECURE === 'true' || true, // Default to SSL for cPanel
+        port: parseInt(process.env.EMAIL_PORT) || 587,
+        secure: process.env.EMAIL_SECURE === 'true', // Use TLS (false) or SSL (true)
         auth: {
           user: process.env.EMAIL_USER || '',
           pass: process.env.EMAIL_PASS || ''
