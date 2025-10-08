@@ -29,7 +29,6 @@ const createPage = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Create page error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to create page'
@@ -54,7 +53,6 @@ const getAllPages = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get pages error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve pages'
@@ -87,7 +85,6 @@ const getPageById = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get page error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve page'
@@ -112,7 +109,6 @@ const getAllPagesPublic = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get pages error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve pages'
@@ -145,7 +141,6 @@ const getPageByName = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get page error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve page'
@@ -192,7 +187,6 @@ const updatePage = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Update page error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to update page'
@@ -226,7 +220,6 @@ const deletePage = async (req, res) => {
       message: 'Page and associated breadcrumb deleted successfully'
     });
   } catch (error) {
-    console.error('Delete page error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to delete page'

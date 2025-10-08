@@ -16,6 +16,7 @@ const contactRoutes = require('./routes/contact');
 const notificationRoutes = require('./routes/notification');
 const pageRoutes = require('./routes/page');
 const breadcrumbRoutes = require('./routes/breadcrumb');
+const consultantRoutes = require('./routes/consultant');
 
 // Create Express app
 const app = express();
@@ -110,6 +111,7 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/pages', pageRoutes);
 app.use('/api/breadcrumbs', breadcrumbRoutes);
+app.use('/api/consultants', consultantRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

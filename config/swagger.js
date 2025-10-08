@@ -895,6 +895,268 @@ const options = {
               }
             }
           }
+        },
+        Consultant: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              description: 'Consultant request ID',
+              example: 1
+            },
+            ngoName: {
+              type: 'string',
+              description: 'NGO name',
+              example: 'Green Earth Foundation'
+            },
+            ngoRegistrationNumber: {
+              type: 'string',
+              description: 'NGO registration number',
+              example: 'REG-2024-001'
+            },
+            chairmanPresidentName: {
+              type: 'string',
+              description: 'Chairman or President name',
+              example: 'Dr. Sarah Johnson'
+            },
+            specializedAreas: {
+              type: 'string',
+              description: 'Specialized areas of operation',
+              example: 'Environmental conservation, climate resilience, sustainable agriculture'
+            },
+            planningToExpand: {
+              type: 'boolean',
+              description: 'Whether planning to expand operations',
+              example: true
+            },
+            expansionRegions: {
+              type: 'string',
+              description: 'Regions for expansion',
+              example: 'East Africa, South Asia'
+            },
+            needFundingSupport: {
+              type: 'boolean',
+              description: 'Whether needs funding support',
+              example: true
+            },
+            totalFundRequired: {
+              type: 'number',
+              description: 'Total fund required in USD',
+              example: 500000.00
+            },
+            lookingForFundManager: {
+              type: 'boolean',
+              description: 'Whether looking for fund manager',
+              example: false
+            },
+            openToSplittingInvestment: {
+              type: 'boolean',
+              description: 'Whether open to splitting investment',
+              example: true
+            },
+            hasSpecializedTeam: {
+              type: 'boolean',
+              description: 'Whether has specialized team for proposals',
+              example: false
+            },
+            needAssistance: {
+              type: 'boolean',
+              description: 'Whether needs assistance with proposals',
+              example: true
+            },
+            emailAddress: {
+              type: 'string',
+              description: 'Email address',
+              example: 'contact@greenearth.org'
+            },
+            websiteAddress: {
+              type: 'string',
+              description: 'Website address',
+              example: 'https://www.greenearth.org'
+            },
+            phoneNumber: {
+              type: 'string',
+              description: 'Phone number',
+              example: '+1-555-0123'
+            },
+            status: {
+              type: 'string',
+              enum: ['new', 'read', 'contacted', 'closed'],
+              description: 'Request status',
+              example: 'new'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Creation timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Last update timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            }
+          }
+        },
+        ConsultantRequest: {
+          type: 'object',
+          required: ['ngoName', 'chairmanPresidentName', 'specializedAreas', 'planningToExpand', 'needFundingSupport', 'lookingForFundManager', 'openToSplittingInvestment', 'hasSpecializedTeam', 'emailAddress', 'phoneNumber'],
+          properties: {
+            ngoName: {
+              type: 'string',
+              description: 'NGO name',
+              example: 'Green Earth Foundation',
+              minLength: 2,
+              maxLength: 255
+            },
+            ngoRegistrationNumber: {
+              type: 'string',
+              description: 'NGO registration number',
+              example: 'REG-2024-001',
+              maxLength: 100
+            },
+            chairmanPresidentName: {
+              type: 'string',
+              description: 'Chairman or President name',
+              example: 'Dr. Sarah Johnson',
+              minLength: 2,
+              maxLength: 255
+            },
+            specializedAreas: {
+              type: 'string',
+              description: 'Specialized areas of operation',
+              example: 'Environmental conservation, climate resilience, sustainable agriculture',
+              minLength: 5,
+              maxLength: 1000
+            },
+            planningToExpand: {
+              type: 'boolean',
+              description: 'Whether planning to expand operations',
+              example: true
+            },
+            expansionRegions: {
+              type: 'string',
+              description: 'Regions for expansion (if planning to expand)',
+              example: 'East Africa, South Asia',
+              maxLength: 500
+            },
+            needFundingSupport: {
+              type: 'boolean',
+              description: 'Whether needs funding support',
+              example: true
+            },
+            totalFundRequired: {
+              type: 'number',
+              description: 'Total fund required in USD (if needs funding)',
+              example: 500000.00
+            },
+            lookingForFundManager: {
+              type: 'boolean',
+              description: 'Whether looking for fund manager',
+              example: false
+            },
+            openToSplittingInvestment: {
+              type: 'boolean',
+              description: 'Whether open to splitting investment',
+              example: true
+            },
+            hasSpecializedTeam: {
+              type: 'boolean',
+              description: 'Whether has specialized team for proposals',
+              example: false
+            },
+            needAssistance: {
+              type: 'boolean',
+              description: 'Whether needs assistance with proposals (if no specialized team)',
+              example: true
+            },
+            emailAddress: {
+              type: 'string',
+              format: 'email',
+              description: 'Email address',
+              example: 'contact@greenearth.org'
+            },
+            websiteAddress: {
+              type: 'string',
+              format: 'uri',
+              description: 'Website address',
+              example: 'https://www.greenearth.org'
+            },
+            phoneNumber: {
+              type: 'string',
+              description: 'Phone number',
+              example: '+1-555-0123',
+              minLength: 5,
+              maxLength: 50
+            }
+          }
+        },
+        ConsultantResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Consultant request submitted successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                consultant: {
+                  $ref: '#/components/schemas/Consultant'
+                }
+              }
+            }
+          }
+        },
+        ConsultantListResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Consultant requests retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                consultants: {
+                  type: 'array',
+                  items: {
+                    $ref: '#/components/schemas/Consultant'
+                  }
+                },
+                pagination: {
+                  type: 'object',
+                  properties: {
+                    page: {
+                      type: 'integer',
+                      example: 1
+                    },
+                    pageSize: {
+                      type: 'integer',
+                      example: 10
+                    },
+                    total: {
+                      type: 'integer',
+                      example: 25
+                    },
+                    pages: {
+                      type: 'integer',
+                      example: 3
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },

@@ -132,6 +132,89 @@ const validateBreadcrumbUpdate = [
     .withMessage('Page description cannot be empty')
 ];
 
+// Consultant request validation
+const validateConsultantRequest = [
+  body('ngoName')
+    .trim()
+    .isLength({ min: 2, max: 255 })
+    .withMessage('NGO name must be between 2 and 255 characters')
+    .notEmpty()
+    .withMessage('NGO name is required'),
+  
+  body('ngoRegistrationNumber')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Registration number must not exceed 100 characters'),
+  
+  body('chairmanPresidentName')
+    .trim()
+    .isLength({ min: 2, max: 255 })
+    .withMessage('Chairman/President name must be between 2 and 255 characters')
+    .notEmpty()
+    .withMessage('Chairman/President name is required'),
+  
+  body('specializedAreas')
+    .trim()
+    .isLength({ min: 5, max: 1000 })
+    .withMessage('Specialized areas must be between 5 and 1000 characters')
+    .notEmpty()
+    .withMessage('Specialized areas are required'),
+  
+  body('planningToExpand')
+    .isBoolean()
+    .withMessage('Planning to expand must be a boolean value'),
+  
+  body('expansionRegions')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Expansion regions must not exceed 500 characters'),
+  
+  body('needFundingSupport')
+    .isBoolean()
+    .withMessage('Need funding support must be a boolean value'),
+  
+  body('totalFundRequired')
+    .optional()
+    .isDecimal({ decimal_digits: '0,2' })
+    .withMessage('Total fund required must be a valid decimal number'),
+  
+  body('lookingForFundManager')
+    .isBoolean()
+    .withMessage('Looking for fund manager must be a boolean value'),
+  
+  body('openToSplittingInvestment')
+    .isBoolean()
+    .withMessage('Open to splitting investment must be a boolean value'),
+  
+  body('hasSpecializedTeam')
+    .isBoolean()
+    .withMessage('Has specialized team must be a boolean value'),
+  
+  body('needAssistance')
+    .optional()
+    .isBoolean()
+    .withMessage('Need assistance must be a boolean value'),
+  
+  body('emailAddress')
+    .isEmail()
+    .withMessage('Please provide a valid email address')
+    .normalizeEmail(),
+  
+  body('websiteAddress')
+    .optional()
+    .isURL()
+    .withMessage('Please provide a valid website URL'),
+  
+  body('phoneNumber')
+    .trim()
+    .isLength({ min: 5, max: 50 })
+    .withMessage('Phone number must be between 5 and 50 characters')
+    .notEmpty()
+    .withMessage('Phone number is required')
+];
+
 module.exports = {
   validateRegistration,
   validateLogin,
@@ -141,5 +224,6 @@ module.exports = {
   validatePageCreation,
   validatePageUpdate,
   validateBreadcrumbCreation,
-  validateBreadcrumbUpdate
+  validateBreadcrumbUpdate,
+  validateConsultantRequest
 };

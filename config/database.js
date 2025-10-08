@@ -94,6 +94,34 @@ const initializeDatabase = async () => {
           )
         `);
 
+        // Create consultants table
+        await promisePool.execute(`
+          CREATE TABLE IF NOT EXISTS consultants (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            ngoName VARCHAR(255) NOT NULL,
+            ngoRegistrationNumber VARCHAR(100),
+            chairmanPresidentName VARCHAR(255) NOT NULL,
+            specializedAreas TEXT NOT NULL,
+            planningToExpand BOOLEAN DEFAULT FALSE,
+            expansionRegions TEXT,
+            needFundingSupport BOOLEAN DEFAULT FALSE,
+            totalFundRequired DECIMAL(15,2),
+            lookingForFundManager BOOLEAN DEFAULT FALSE,
+            openToSplittingInvestment BOOLEAN DEFAULT FALSE,
+            hasSpecializedTeam BOOLEAN DEFAULT FALSE,
+            needAssistance BOOLEAN,
+            emailAddress VARCHAR(255) NOT NULL,
+            websiteAddress VARCHAR(255),
+            phoneNumber VARCHAR(50) NOT NULL,
+            status ENUM('new', 'read', 'contacted', 'closed') DEFAULT 'new',
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_status (status),
+            INDEX idx_createdAt (createdAt),
+            INDEX idx_email (emailAddress)
+          )
+        `);
+
     console.log('✅ Database tables created successfully');
   } catch (error) {
     console.error('❌ Database initialization failed:', error.message);

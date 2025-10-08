@@ -34,7 +34,6 @@ const createOrUpdateBreadcrumb = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Create/update breadcrumb error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to create/update breadcrumb'
@@ -59,7 +58,6 @@ const getAllBreadcrumbs = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get breadcrumbs error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve breadcrumbs'
@@ -92,7 +90,6 @@ const getBreadcrumbById = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get breadcrumb error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve breadcrumb'
@@ -117,7 +114,6 @@ const getAllBreadcrumbsPublic = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get breadcrumbs error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve breadcrumbs'
@@ -150,7 +146,6 @@ const getBreadcrumbByPage = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get breadcrumb error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve breadcrumb'
@@ -190,7 +185,6 @@ const updateBreadcrumb = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Update breadcrumb error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to update breadcrumb'
@@ -222,7 +216,6 @@ const deleteBreadcrumb = async (req, res) => {
       message: 'Breadcrumb deleted successfully'
     });
   } catch (error) {
-    console.error('Delete breadcrumb error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to delete breadcrumb'
