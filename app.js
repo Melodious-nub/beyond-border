@@ -13,6 +13,7 @@ const { swaggerUi, specs } = require('./config/swagger');
 // Import routes
 const authRoutes = require('./routes/auth');
 const contactRoutes = require('./routes/contact');
+const notificationRoutes = require('./routes/notification');
 
 // Create Express app
 const app = express();
@@ -33,10 +34,13 @@ app.use(limiter);
 
 // CORS configuration - Allow all origins
 app.use(cors({
-  origin: true, // Allow all origins
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  origin: '*', // Allow all origins explicitly
+  credentials: false, // Set to false when using wildcard origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
 
 // Body parsing middleware
@@ -101,6 +105,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

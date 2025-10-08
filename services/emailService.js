@@ -248,6 +248,130 @@ class EmailService {
     }
   }
 
+  // Send custom notification to specific email
+  async sendCustomNotification(toEmail, subject, message) {
+    try {
+      if (!this.transporter) {
+        return { success: false, message: 'Email service not configured' };
+      }
+
+      const mailOptions = {
+        from: `"${process.env.EMAIL_FROM_NAME || 'Beyond Border'}" <${process.env.EMAIL_USER}>`,
+        to: toEmail,
+        subject: subject,
+        html: this.generateCustomNotificationTemplate(subject, message)
+      };
+
+      const result = await this.transporter.sendMail(mailOptions);
+      return { 
+        success: true, 
+        message: 'Custom notification sent successfully',
+        messageId: result.messageId
+      };
+    } catch (error) {
+      return { 
+        success: false, 
+        message: 'Failed to send custom notification',
+        error: error.message
+      };
+    }
+  }
+
+  // Generate custom notification email template
+  generateCustomNotificationTemplate(subject, message) {
+    const currentDate = new Date().toLocaleString();
+    
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${subject}</title>
+        <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f4f4f4;
+            }
+            .container {
+                background-color: #ffffff;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            }
+            .header {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 20px;
+                border-radius: 8px;
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            .header h1 {
+                margin: 0;
+                font-size: 24px;
+                font-weight: 300;
+            }
+            .content {
+                margin-bottom: 30px;
+                padding: 20px;
+                background-color: #f8f9fa;
+                border-radius: 8px;
+                border-left: 4px solid #667eea;
+            }
+            .message {
+                white-space: pre-wrap;
+                font-size: 16px;
+                line-height: 1.6;
+            }
+            .footer {
+                text-align: center;
+                padding: 20px;
+                background-color: #f8f9fa;
+                border-radius: 8px;
+                color: #6c757d;
+                font-size: 14px;
+            }
+            .timestamp {
+                background-color: #e3f2fd;
+                color: #1976d2;
+                padding: 10px;
+                border-radius: 4px;
+                text-align: center;
+                margin-top: 20px;
+                font-size: 14px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>📢 ${subject}</h1>
+            </div>
+            
+            <div class="content">
+                <div class="message">${message}</div>
+            </div>
+            
+            <div class="timestamp">
+                <strong>📅 Sent:</strong> ${currentDate}
+            </div>
+            
+            <div class="footer">
+                <p>This notification was sent from your Beyond Border notification system.</p>
+                <p>To manage notification settings, please contact your system administrator.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+  }
+
   // Test email configuration
   async testEmailConfiguration() {
     try {

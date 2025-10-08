@@ -491,6 +491,56 @@ const options = {
               }
             }
           }
+        },
+        SendNotificationRequest: {
+          type: 'object',
+          required: ['subject', 'message'],
+          properties: {
+            subject: {
+              type: 'string',
+              description: 'Email subject line',
+              example: 'System Alert',
+              minLength: 1,
+              maxLength: 200
+            },
+            message: {
+              type: 'string',
+              description: 'Email message content',
+              example: 'This is a system notification message.',
+              minLength: 1,
+              maxLength: 2000
+            }
+          }
+        },
+        SendNotificationResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Notification sent to 3 email addresses'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                sentCount: {
+                  type: 'integer',
+                  example: 3
+                },
+                failedCount: {
+                  type: 'integer',
+                  example: 0
+                },
+                totalConfigured: {
+                  type: 'integer',
+                  example: 3
+                }
+              }
+            }
+          }
         }
       }
     },
