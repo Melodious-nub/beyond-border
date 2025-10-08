@@ -69,6 +69,31 @@ const initializeDatabase = async () => {
           )
         `);
 
+      // Create pages table
+      await promisePool.execute(`
+        CREATE TABLE IF NOT EXISTS pages (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          page VARCHAR(100) UNIQUE NOT NULL,
+          createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          INDEX idx_page (page)
+        )
+      `);
+
+        // Create breadcrumbs table
+        await promisePool.execute(`
+          CREATE TABLE IF NOT EXISTS breadcrumbs (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            page VARCHAR(100) UNIQUE NOT NULL,
+            pageTitle VARCHAR(200) NOT NULL,
+            pageDescription TEXT NOT NULL,
+            bgColor VARCHAR(7) DEFAULT '#ffffff',
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_page (page)
+          )
+        `);
+
     console.log('✅ Database tables created successfully');
   } catch (error) {
     console.error('❌ Database initialization failed:', error.message);

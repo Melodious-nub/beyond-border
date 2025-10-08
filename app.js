@@ -14,6 +14,8 @@ const { swaggerUi, specs } = require('./config/swagger');
 const authRoutes = require('./routes/auth');
 const contactRoutes = require('./routes/contact');
 const notificationRoutes = require('./routes/notification');
+const pageRoutes = require('./routes/page');
+const breadcrumbRoutes = require('./routes/breadcrumb');
 
 // Create Express app
 const app = express();
@@ -106,6 +108,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
 app.use('/api/auth', authRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/pages', pageRoutes);
+app.use('/api/breadcrumbs', breadcrumbRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

@@ -541,6 +541,360 @@ const options = {
               }
             }
           }
+        },
+        Page: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              description: 'Page ID',
+              example: 1
+            },
+            page: {
+              type: 'string',
+              description: 'Page slug (URL-friendly identifier)',
+              example: 'about',
+              minLength: 2,
+              maxLength: 100
+            },
+            pageTitle: {
+              type: 'string',
+              description: 'Page title for display',
+              example: 'About Beyond Border Consultants',
+              minLength: 2,
+              maxLength: 200
+            },
+            pageDescription: {
+              type: 'string',
+              description: 'Page description/meta description',
+              example: 'Beyond Border Consultants is a multidisciplinary advisory firm dedicated to empowering NGOs, development agencies, and public-private partnerships through strategic consultancy services.',
+              minLength: 10,
+              maxLength: 2000
+            },
+            bgColor: {
+              type: 'string',
+              description: 'Background color in hex format',
+              example: '#ffffff',
+              pattern: '^#[0-9A-Fa-f]{6}$'
+            },
+            isActive: {
+              type: 'boolean',
+              description: 'Whether the page is active',
+              example: true,
+              default: true
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Page creation timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Page last update timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            }
+          }
+        },
+        PageCreationRequest: {
+          type: 'object',
+          required: ['page', 'pageTitle', 'pageDescription'],
+          properties: {
+            page: {
+              type: 'string',
+              description: 'Page slug',
+              example: 'about'
+            },
+            pageTitle: {
+              type: 'string',
+              description: 'Page title',
+              example: 'About Beyond Border Consultants'
+            },
+            pageDescription: {
+              type: 'string',
+              description: 'Page description',
+              example: 'Beyond Border Consultants is a multidisciplinary advisory firm...'
+            },
+            bgColor: {
+              type: 'string',
+              description: 'Background color',
+              example: '#ffffff'
+            },
+            isActive: {
+              type: 'boolean',
+              description: 'Whether the page is active',
+              example: true
+            }
+          }
+        },
+        PageUpdateRequest: {
+          type: 'object',
+          properties: {
+            page: {
+              type: 'string',
+              description: 'Page slug',
+              example: 'about-updated'
+            },
+            pageTitle: {
+              type: 'string',
+              description: 'Page title',
+              example: 'About Beyond Border Consultants - Updated'
+            },
+            pageDescription: {
+              type: 'string',
+              description: 'Page description',
+              example: 'Updated description for Beyond Border Consultants...'
+            },
+            bgColor: {
+              type: 'string',
+              description: 'Background color',
+              example: '#f8f9fa'
+            },
+            isActive: {
+              type: 'boolean',
+              description: 'Whether the page is active',
+              example: true
+            }
+          }
+        },
+        PageResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Page retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                page: {
+                  $ref: '#/components/schemas/Page'
+                }
+              }
+            }
+          }
+        },
+        PageListResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Pages retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                pages: {
+                  type: 'array',
+                  items: {
+                    $ref: '#/components/schemas/Page'
+                  }
+                }
+              }
+            }
+          }
+        },
+        Breadcrumb: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              description: 'Breadcrumb ID',
+              example: 1
+            },
+            pageId: {
+              type: 'integer',
+              description: 'Associated page ID',
+              example: 1
+            },
+            page: {
+              type: 'string',
+              description: 'Page slug',
+              example: 'about',
+              minLength: 2,
+              maxLength: 100
+            },
+            pageTitle: {
+              type: 'string',
+              description: 'Page title for breadcrumb',
+              example: 'About Beyond Border Consultants',
+              minLength: 2,
+              maxLength: 200
+            },
+            pageDescription: {
+              type: 'string',
+              description: 'Page description for breadcrumb',
+              example: 'Beyond Border Consultants is a multidisciplinary advisory firm dedicated to empowering NGOs, development agencies, and public-private partnerships through strategic consultancy services.',
+              minLength: 10,
+              maxLength: 2000
+            },
+            bgColor: {
+              type: 'string',
+              description: 'Background color in hex format',
+              example: '#ffffff',
+              pattern: '^#[0-9A-Fa-f]{6}$'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Breadcrumb creation timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Breadcrumb last update timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            }
+          }
+        },
+        BreadcrumbCreationRequest: {
+          type: 'object',
+          required: ['pageId', 'page', 'pageTitle', 'pageDescription'],
+          properties: {
+            pageId: {
+              type: 'integer',
+              description: 'Associated page ID',
+              example: 1
+            },
+            page: {
+              type: 'string',
+              description: 'Page slug',
+              example: 'about'
+            },
+            pageTitle: {
+              type: 'string',
+              description: 'Page title',
+              example: 'About Beyond Border Consultants'
+            },
+            pageDescription: {
+              type: 'string',
+              description: 'Page description',
+              example: 'Beyond Border Consultants is a multidisciplinary advisory firm...'
+            },
+            bgColor: {
+              type: 'string',
+              description: 'Background color',
+              example: '#ffffff'
+            }
+          }
+        },
+        BreadcrumbUpdateRequest: {
+          type: 'object',
+          properties: {
+            page: {
+              type: 'string',
+              description: 'Page slug',
+              example: 'about-updated'
+            },
+            pageTitle: {
+              type: 'string',
+              description: 'Page title',
+              example: 'About Beyond Border Consultants - Updated'
+            },
+            pageDescription: {
+              type: 'string',
+              description: 'Page description',
+              example: 'Updated description for Beyond Border Consultants...'
+            },
+            bgColor: {
+              type: 'string',
+              description: 'Background color',
+              example: '#f8f9fa'
+            }
+          }
+        },
+        BreadcrumbResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Breadcrumb retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                breadcrumb: {
+                  $ref: '#/components/schemas/Breadcrumb'
+                }
+              }
+            }
+          }
+        },
+        BreadcrumbListResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Breadcrumbs retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                breadcrumbs: {
+                  type: 'array',
+                  items: {
+                    $ref: '#/components/schemas/Breadcrumb'
+                  }
+                }
+              }
+            }
+          }
+        },
+        PageDataResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Page data retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                pageData: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      page: {
+                        type: 'string',
+                        example: 'about'
+                      },
+                      pageTitle: {
+                        type: 'string',
+                        example: 'About Beyond Border Consultants'
+                      },
+                      pageDescription: {
+                        type: 'string',
+                        example: 'Beyond Border Consultants is a multidisciplinary advisory firm...'
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },

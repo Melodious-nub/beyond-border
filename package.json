@@ -11,7 +11,8 @@
     "test": "node test-api.js",
     "test-swagger": "node test-swagger.js",
     "test-db": "node test-db-connection.js",
-    "test-contact": "node test-contact-api.js"
+    "test-contact": "node test-contact-api.js",
+    "test-simple": "node test-simple-api.js"
   },
   "keywords": ["express", "mysql", "backend", "website-maintenance"],
   "author": "",

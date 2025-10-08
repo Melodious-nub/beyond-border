@@ -82,10 +82,64 @@ const validateContactStatusUpdate = [
     .withMessage('Status must be one of: new, read, replied, closed')
 ];
 
+// Page creation validation
+const validatePageCreation = [
+  body('page')
+    .trim()
+    .notEmpty()
+    .withMessage('Page name is required')
+];
+
+// Page update validation
+const validatePageUpdate = [
+  body('page')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Page name cannot be empty')
+];
+
+// Breadcrumb creation/update validation
+const validateBreadcrumbCreation = [
+  body('page')
+    .trim()
+    .notEmpty()
+    .withMessage('Page name is required'),
+  
+  body('pageTitle')
+    .trim()
+    .notEmpty()
+    .withMessage('Page title is required'),
+  
+  body('pageDescription')
+    .trim()
+    .notEmpty()
+    .withMessage('Page description is required')
+];
+
+// Breadcrumb update validation
+const validateBreadcrumbUpdate = [
+  body('pageTitle')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Page title cannot be empty'),
+  
+  body('pageDescription')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Page description cannot be empty')
+];
+
 module.exports = {
   validateRegistration,
   validateLogin,
   validateProfileUpdate,
   validateContactForm,
-  validateContactStatusUpdate
+  validateContactStatusUpdate,
+  validatePageCreation,
+  validatePageUpdate,
+  validateBreadcrumbCreation,
+  validateBreadcrumbUpdate
 };
