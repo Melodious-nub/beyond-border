@@ -215,6 +215,49 @@ const validateConsultantRequest = [
     .withMessage('Phone number is required')
 ];
 
+// Team member creation validation - Only required fields
+const validateTeamMemberCreation = [
+  body('name')
+    .trim()
+    .isLength({ min: 2, max: 100 })
+    .withMessage('Name must be between 2 and 100 characters')
+    .notEmpty()
+    .withMessage('Name is required'),
+  
+  body('email')
+    .isEmail()
+    .normalizeEmail()
+    .withMessage('Please provide a valid email address'),
+  
+  body('designation')
+    .trim()
+    .isLength({ min: 2, max: 100 })
+    .withMessage('Designation must be between 2 and 100 characters')
+    .notEmpty()
+    .withMessage('Designation is required')
+];
+
+// Team member update validation - Only validate if fields are provided
+const validateTeamMemberUpdate = [
+  body('name')
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 100 })
+    .withMessage('Name must be between 2 and 100 characters'),
+  
+  body('email')
+    .optional()
+    .isEmail()
+    .normalizeEmail()
+    .withMessage('Please provide a valid email address'),
+  
+  body('designation')
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 100 })
+    .withMessage('Designation must be between 2 and 100 characters')
+];
+
 module.exports = {
   validateRegistration,
   validateLogin,
@@ -225,5 +268,7 @@ module.exports = {
   validatePageUpdate,
   validateBreadcrumbCreation,
   validateBreadcrumbUpdate,
-  validateConsultantRequest
+  validateConsultantRequest,
+  validateTeamMemberCreation,
+  validateTeamMemberUpdate
 };

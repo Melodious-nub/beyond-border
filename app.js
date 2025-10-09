@@ -17,6 +17,7 @@ const notificationRoutes = require('./routes/notification');
 const pageRoutes = require('./routes/page');
 const breadcrumbRoutes = require('./routes/breadcrumb');
 const consultantRoutes = require('./routes/consultant');
+const teamRoutes = require('./routes/team');
 
 // Create Express app
 const app = express();
@@ -49,6 +50,9 @@ app.use(cors({
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static('uploads'));
 
 /**
  * @swagger
@@ -112,6 +116,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/pages', pageRoutes);
 app.use('/api/breadcrumbs', breadcrumbRoutes);
 app.use('/api/consultants', consultantRoutes);
+app.use('/api/teams', teamRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

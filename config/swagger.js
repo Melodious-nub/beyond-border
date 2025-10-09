@@ -1157,6 +1157,491 @@ const options = {
               }
             }
           }
+        },
+        TeamMember: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              description: 'Team member ID',
+              example: 1
+            },
+            name: {
+              type: 'string',
+              description: 'Team member name',
+              example: 'John Doe',
+              minLength: 2,
+              maxLength: 100
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+              description: 'Team member email',
+              example: 'john@example.com'
+            },
+            avatar: {
+              type: 'string',
+              description: 'Team member avatar direct URL',
+              example: 'http://localhost:3000/uploads/avatars/avatar-1234567890-123456789.jpg'
+            },
+            designation: {
+              type: 'string',
+              description: 'Team member designation',
+              example: 'Senior Developer',
+              minLength: 2,
+              maxLength: 100
+            },
+            status: {
+              type: 'string',
+              enum: ['active', 'inactive'],
+              description: 'Team member status',
+              example: 'active',
+              default: 'active'
+            },
+            isManagement: {
+              type: 'boolean',
+              description: 'Whether the member is in management',
+              example: false,
+              default: false
+            },
+            phoneNumber: {
+              type: 'string',
+              description: 'Team member phone number',
+              example: '+1-555-0123'
+            },
+            department: {
+              type: 'string',
+              description: 'Team member department',
+              example: 'Engineering',
+              maxLength: 100
+            },
+            linkedinUrl: {
+              type: 'string',
+              format: 'uri',
+              description: 'LinkedIn profile URL',
+              example: 'https://linkedin.com/in/johndoe'
+            },
+            facebookUrl: {
+              type: 'string',
+              format: 'uri',
+              description: 'Facebook profile URL',
+              example: 'https://facebook.com/johndoe'
+            },
+            twitterUrl: {
+              type: 'string',
+              format: 'uri',
+              description: 'Twitter/X profile URL',
+              example: 'https://twitter.com/johndoe'
+            },
+            instagramUrl: {
+              type: 'string',
+              format: 'uri',
+              description: 'Instagram profile URL',
+              example: 'https://instagram.com/johndoe'
+            },
+            redditUrl: {
+              type: 'string',
+              format: 'uri',
+              description: 'Reddit profile URL',
+              example: 'https://reddit.com/u/johndoe'
+            },
+            description: {
+              type: 'string',
+              description: 'Team member description',
+              example: 'Experienced developer with 5+ years in web technologies',
+              maxLength: 1000
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Team member creation timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Team member last update timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            }
+          }
+        },
+        TeamMemberCreationRequest: {
+          type: 'object',
+          required: ['name', 'email', 'designation'],
+          properties: {
+            name: {
+              type: 'string',
+              description: 'Team member name',
+              example: 'John Doe',
+              minLength: 2,
+              maxLength: 100
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+              description: 'Team member email',
+              example: 'john@example.com'
+            },
+            avatar: {
+              type: 'string',
+              description: 'Team member avatar direct URL',
+              example: 'http://localhost:3000/uploads/avatars/avatar-1234567890-123456789.jpg'
+            },
+            designation: {
+              type: 'string',
+              description: 'Team member designation',
+              example: 'Senior Developer',
+              minLength: 2,
+              maxLength: 100
+            },
+            status: {
+              type: 'string',
+              enum: ['active', 'inactive'],
+              description: 'Team member status',
+              example: 'active',
+              default: 'active'
+            },
+            isManagement: {
+              type: 'boolean',
+              description: 'Whether the member is in management',
+              example: false,
+              default: false
+            },
+            phoneNumber: {
+              type: 'string',
+              description: 'Team member phone number',
+              example: '+1-555-0123'
+            },
+            department: {
+              type: 'string',
+              description: 'Team member department',
+              example: 'Engineering',
+              maxLength: 100
+            },
+            linkedinUrl: {
+              type: 'string',
+              format: 'uri',
+              description: 'LinkedIn profile URL',
+              example: 'https://linkedin.com/in/johndoe'
+            },
+            facebookUrl: {
+              type: 'string',
+              format: 'uri',
+              description: 'Facebook profile URL',
+              example: 'https://facebook.com/johndoe'
+            },
+            twitterUrl: {
+              type: 'string',
+              format: 'uri',
+              description: 'Twitter/X profile URL',
+              example: 'https://twitter.com/johndoe'
+            },
+            instagramUrl: {
+              type: 'string',
+              format: 'uri',
+              description: 'Instagram profile URL',
+              example: 'https://instagram.com/johndoe'
+            },
+            redditUrl: {
+              type: 'string',
+              format: 'uri',
+              description: 'Reddit profile URL',
+              example: 'https://reddit.com/u/johndoe'
+            },
+            description: {
+              type: 'string',
+              description: 'Team member description',
+              example: 'Experienced developer with 5+ years in web technologies',
+              maxLength: 1000
+            }
+          }
+        },
+        TeamMemberUpdateRequest: {
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+              description: 'Team member name',
+              example: 'John Updated Doe',
+              minLength: 2,
+              maxLength: 100
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+              description: 'Team member email',
+              example: 'john.updated@example.com'
+            },
+            avatar: {
+              type: 'string',
+              description: 'Team member avatar URL',
+              example: 'https://example.com/avatar-updated.jpg'
+            },
+            designation: {
+              type: 'string',
+              description: 'Team member designation',
+              example: 'Lead Developer',
+              minLength: 2,
+              maxLength: 100
+            },
+            status: {
+              type: 'string',
+              enum: ['active', 'inactive'],
+              description: 'Team member status',
+              example: 'active'
+            },
+            isManagement: {
+              type: 'boolean',
+              description: 'Whether the member is in management',
+              example: true
+            },
+            phoneNumber: {
+              type: 'string',
+              description: 'Team member phone number',
+              example: '+1-555-0124'
+            },
+            department: {
+              type: 'string',
+              description: 'Team member department',
+              example: 'Engineering',
+              maxLength: 100
+            },
+            linkedinUrl: {
+              type: 'string',
+              format: 'uri',
+              description: 'LinkedIn profile URL',
+              example: 'https://linkedin.com/in/johndoe'
+            },
+            facebookUrl: {
+              type: 'string',
+              format: 'uri',
+              description: 'Facebook profile URL',
+              example: 'https://facebook.com/johndoe'
+            },
+            twitterUrl: {
+              type: 'string',
+              format: 'uri',
+              description: 'Twitter/X profile URL',
+              example: 'https://twitter.com/johndoe'
+            },
+            instagramUrl: {
+              type: 'string',
+              format: 'uri',
+              description: 'Instagram profile URL',
+              example: 'https://instagram.com/johndoe'
+            },
+            redditUrl: {
+              type: 'string',
+              format: 'uri',
+              description: 'Reddit profile URL',
+              example: 'https://reddit.com/u/johndoe'
+            },
+            description: {
+              type: 'string',
+              description: 'Team member description',
+              example: 'Lead developer with 8+ years in web technologies',
+              maxLength: 1000
+            }
+          }
+        },
+        TeamMemberResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Team member retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                teamMember: {
+                  $ref: '#/components/schemas/TeamMember'
+                }
+              }
+            }
+          }
+        },
+        TeamMemberListResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Team members retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                teams: {
+                  type: 'array',
+                  items: {
+                    $ref: '#/components/schemas/TeamMember'
+                  }
+                },
+                pagination: {
+                  type: 'object',
+                  properties: {
+                    page: {
+                      type: 'integer',
+                      example: 1
+                    },
+                    pageSize: {
+                      type: 'integer',
+                      example: 10
+                    },
+                    total: {
+                      type: 'integer',
+                      example: 25
+                    },
+                    pages: {
+                      type: 'integer',
+                      example: 3
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        TeamMemberPublicListResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Active team members retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                teamMembers: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      id: {
+                        type: 'integer',
+                        example: 1
+                      },
+                      name: {
+                        type: 'string',
+                        example: 'John Doe'
+                      },
+                      email: {
+                        type: 'string',
+                        example: 'john@example.com'
+                      },
+                      avatar: {
+                        type: 'string',
+                        example: 'https://example.com/avatar.jpg'
+                      },
+                      designation: {
+                        type: 'string',
+                        example: 'Senior Developer'
+                      },
+                      isManagement: {
+                        type: 'boolean',
+                        example: false
+                      },
+                      phoneNumber: {
+                        type: 'string',
+                        example: '+1-555-0123'
+                      },
+                      department: {
+                        type: 'string',
+                        example: 'Engineering'
+                      },
+                      linkedinUrl: {
+                        type: 'string',
+                        example: 'https://linkedin.com/in/johndoe'
+                      },
+                      facebookUrl: {
+                        type: 'string',
+                        example: 'https://facebook.com/johndoe'
+                      },
+                      twitterUrl: {
+                        type: 'string',
+                        example: 'https://twitter.com/johndoe'
+                      },
+                      instagramUrl: {
+                        type: 'string',
+                        example: 'https://instagram.com/johndoe'
+                      },
+                      redditUrl: {
+                        type: 'string',
+                        example: 'https://reddit.com/u/johndoe'
+                      },
+                      description: {
+                        type: 'string',
+                        example: 'Experienced developer with 5+ years in web technologies'
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        TeamStatsResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Team statistics retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                stats: {
+                  type: 'object',
+                  properties: {
+                    total: {
+                      type: 'integer',
+                      example: 25
+                    },
+                    active: {
+                      type: 'integer',
+                      example: 20
+                    },
+                    management: {
+                      type: 'integer',
+                      example: 5
+                    },
+                    departments: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        properties: {
+                          department: {
+                            type: 'string',
+                            example: 'Engineering'
+                          },
+                          count: {
+                            type: 'integer',
+                            example: 10
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },

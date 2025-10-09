@@ -13,7 +13,8 @@
     "test-db": "node test-db-connection.js",
     "test-contact": "node test-contact-api.js",
     "test-simple": "node test-simple-api.js",
-    "test-consultant": "node test-consultant-api.js"
+    "test-consultant": "node test-consultant-api.js",
+    "test-team": "node test-team-api.js"
   },
   "keywords": ["express", "mysql", "backend", "website-maintenance"],
   "author": "",
@@ -30,7 +31,8 @@
     "express-validator": "^7.0.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
-    "nodemailer": "^6.9.7"
+    "nodemailer": "^6.9.7",
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.2",

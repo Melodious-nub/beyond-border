@@ -122,6 +122,34 @@ const initializeDatabase = async () => {
           )
         `);
 
+        // Create teams table
+        await promisePool.execute(`
+          CREATE TABLE IF NOT EXISTS teams (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            email VARCHAR(255) UNIQUE NOT NULL,
+            avatar VARCHAR(500),
+            designation VARCHAR(100) NOT NULL,
+            status ENUM('active', 'inactive') DEFAULT 'active',
+            isManagement BOOLEAN DEFAULT FALSE,
+            phoneNumber VARCHAR(50),
+            department VARCHAR(100),
+            linkedinUrl VARCHAR(500),
+            facebookUrl VARCHAR(500),
+            twitterUrl VARCHAR(500),
+            instagramUrl VARCHAR(500),
+            redditUrl VARCHAR(500),
+            description TEXT,
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_status (status),
+            INDEX idx_isManagement (isManagement),
+            INDEX idx_department (department),
+            INDEX idx_email (email),
+            INDEX idx_createdAt (createdAt)
+          )
+        `);
+
     console.log('✅ Database tables created successfully');
   } catch (error) {
     console.error('❌ Database initialization failed:', error.message);
