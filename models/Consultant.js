@@ -40,7 +40,7 @@ class Consultant {
         hasSpecializedTeam,
         needAssistance,
         emailAddress,
-        websiteAddress,
+        websiteAddress = null, // Default to null if not provided
         phoneNumber
       } = consultantData;
       
@@ -56,9 +56,9 @@ class Consultant {
           JSON.stringify(specializedAreas),
           planningToExpand, 
           expansionRegions ? JSON.stringify(expansionRegions) : null,
-          needFundingSupport, totalFundRequired,
+          needFundingSupport, totalFundRequired || null,
           lookingForFundManager, openToSplittingInvestment, hasSpecializedTeam,
-          needAssistance, emailAddress, websiteAddress, phoneNumber, 'new'
+          needAssistance || null, emailAddress, websiteAddress || null, phoneNumber, 'new'
         ]
       );
       

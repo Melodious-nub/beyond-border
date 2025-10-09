@@ -1001,7 +1001,7 @@ const options = {
         },
         ConsultantRequest: {
           type: 'object',
-          required: ['ngoName', 'ngoRegistrationNumber', 'chairmanPresidentName', 'specializedAreas', 'planningToExpand', 'needFundingSupport', 'openToSplittingInvestment', 'hasSpecializedTeam', 'emailAddress', 'websiteAddress', 'phoneNumber'],
+          required: ['ngoName', 'ngoRegistrationNumber', 'chairmanPresidentName', 'specializedAreas', 'planningToExpand', 'needFundingSupport', 'openToSplittingInvestment', 'hasSpecializedTeam', 'emailAddress', 'phoneNumber'],
           properties: {
             ngoName: {
               type: 'string',
@@ -1089,7 +1089,7 @@ const options = {
             websiteAddress: {
               type: 'string',
               format: 'uri',
-              description: 'Website address',
+              description: 'Website address (optional)',
               example: 'https://www.greenearth.org'
             },
             phoneNumber: {

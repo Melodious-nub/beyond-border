@@ -242,6 +242,7 @@ const validateConsultantRequest = [
     .normalizeEmail(),
   
   body('websiteAddress')
+    .optional()
     .isURL()
     .withMessage('Please provide a valid website URL'),
   
