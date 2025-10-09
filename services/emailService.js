@@ -291,6 +291,12 @@ class EmailService {
     
     const currentDate = new Date().toLocaleString();
     
+    // Helper function to format arrays
+    const formatArray = (arr) => {
+      if (!arr || !Array.isArray(arr)) return 'N/A';
+      return arr.map(item => `• ${item}`).join('<br>');
+    };
+    
     return `
     <!DOCTYPE html>
     <html lang="en">
@@ -303,68 +309,84 @@ class EmailService {
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 line-height: 1.6;
                 color: #333;
-                max-width: 700px;
-                margin: 0 auto;
-                padding: 20px;
+                max-width: 100%;
+                margin: 0;
+                padding: 10px;
                 background-color: #f4f4f4;
             }
             .container {
                 background-color: #ffffff;
-                padding: 30px;
-                border-radius: 10px;
-                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                max-width: 100%;
             }
             .header {
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 color: white;
-                padding: 20px;
+                padding: 20px 15px;
                 border-radius: 8px;
                 text-align: center;
-                margin-bottom: 30px;
+                margin-bottom: 20px;
             }
             .header h1 {
+                margin: 0 0 10px 0;
+                font-size: 20px;
+                font-weight: 600;
+            }
+            .header p {
                 margin: 0;
-                font-size: 24px;
-                font-weight: 300;
+                font-size: 14px;
+                opacity: 0.9;
             }
             .section {
-                margin-bottom: 30px;
+                margin-bottom: 20px;
                 border: 1px solid #dee2e6;
                 border-radius: 8px;
                 overflow: hidden;
             }
             .section-header {
                 background-color: #f8f9fa;
-                padding: 15px 20px;
+                padding: 12px 15px;
                 border-bottom: 1px solid #dee2e6;
                 font-weight: 600;
                 color: #495057;
+                font-size: 14px;
             }
             .section-content {
-                padding: 20px;
+                padding: 15px;
             }
             .field {
-                margin-bottom: 15px;
-                display: flex;
-                flex-wrap: wrap;
+                margin-bottom: 12px;
+                padding: 8px 0;
+                border-bottom: 1px solid #f1f3f4;
+            }
+            .field:last-child {
+                border-bottom: none;
+                margin-bottom: 0;
             }
             .field-label {
                 font-weight: 600;
                 color: #495057;
-                min-width: 200px;
-                margin-bottom: 5px;
+                margin-bottom: 4px;
+                font-size: 13px;
+                display: block;
+                width: 100%;
             }
             .field-value {
                 color: #212529;
-                flex: 1;
+                font-size: 14px;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
             }
             .yes-no {
                 display: inline-block;
-                padding: 4px 12px;
-                border-radius: 20px;
+                padding: 3px 8px;
+                border-radius: 12px;
                 font-weight: 600;
-                font-size: 12px;
+                font-size: 11px;
                 text-transform: uppercase;
+                margin-top: 2px;
             }
             .yes {
                 background-color: #d4edda;
@@ -374,30 +396,69 @@ class EmailService {
                 background-color: #f8d7da;
                 color: #721c24;
             }
+            .array-list {
+                margin: 4px 0;
+                line-height: 1.4;
+            }
             .footer {
                 text-align: center;
-                padding: 20px;
+                padding: 15px;
                 background-color: #f8f9fa;
                 border-radius: 8px;
                 color: #6c757d;
-                font-size: 14px;
+                font-size: 12px;
+                margin-top: 20px;
             }
             .timestamp {
                 background-color: #e3f2fd;
                 color: #1976d2;
-                padding: 10px;
+                padding: 8px;
                 border-radius: 4px;
                 text-align: center;
-                margin-top: 20px;
-                font-size: 14px;
+                margin-top: 15px;
+                font-size: 12px;
             }
             .reply-info {
                 background-color: #fff3cd;
                 border: 1px solid #ffeaa7;
                 color: #856404;
-                padding: 15px;
-                border-radius: 8px;
-                margin-top: 20px;
+                padding: 12px;
+                border-radius: 6px;
+                margin-top: 15px;
+                font-size: 13px;
+            }
+            .fund-amount {
+                font-size: 16px;
+                font-weight: 600;
+                color: #28a745;
+            }
+            
+            /* Mobile optimizations */
+            @media (max-width: 600px) {
+                body {
+                    padding: 5px;
+                }
+                .container {
+                    padding: 10px;
+                }
+                .header {
+                    padding: 15px 10px;
+                }
+                .header h1 {
+                    font-size: 18px;
+                }
+                .section-content {
+                    padding: 10px;
+                }
+                .field {
+                    margin-bottom: 10px;
+                }
+                .field-label {
+                    font-size: 12px;
+                }
+                .field-value {
+                    font-size: 13px;
+                }
             }
         </style>
     </head>
@@ -425,7 +486,7 @@ class EmailService {
                     </div>
                     <div class="field">
                         <div class="field-label">Specialized Areas:</div>
-                        <div class="field-value">${specializedAreas}</div>
+                        <div class="field-value array-list">${formatArray(specializedAreas)}</div>
                     </div>
                 </div>
             </div>
@@ -444,7 +505,7 @@ class EmailService {
                     ${planningToExpand && expansionRegions ? `
                     <div class="field">
                         <div class="field-label">Expansion Regions:</div>
-                        <div class="field-value">${expansionRegions}</div>
+                        <div class="field-value array-list">${formatArray(expansionRegions)}</div>
                     </div>
                     ` : ''}
                 </div>
@@ -461,12 +522,13 @@ class EmailService {
                             </span>
                         </div>
                     </div>
-                    ${totalFundRequired ? `
+                    ${needFundingSupport && totalFundRequired ? `
                     <div class="field">
                         <div class="field-label">Total Fund Required:</div>
-                        <div class="field-value"><strong>$${totalFundRequired} USD</strong></div>
+                        <div class="field-value fund-amount">$${totalFundRequired.toLocaleString()} USD</div>
                     </div>
                     ` : ''}
+                    ${needFundingSupport ? `
                     <div class="field">
                         <div class="field-label">Looking for Fund Manager:</div>
                         <div class="field-value">
@@ -475,6 +537,7 @@ class EmailService {
                             </span>
                         </div>
                     </div>
+                    ` : ''}
                     <div class="field">
                         <div class="field-label">Open to Splitting Investment:</div>
                         <div class="field-value">

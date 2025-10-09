@@ -91,40 +91,6 @@ const getConsultantRequestById = async (req, res) => {
   }
 };
 
-/**
- * Update consultant request status (Admin only)
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- */
-const updateConsultantRequestStatus = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
-
-    const consultant = await Consultant.findById(id);
-    if (!consultant) {
-      return res.status(404).json({
-        success: false,
-        message: 'Consultant request not found'
-      });
-    }
-
-    await consultant.updateStatus(status);
-
-    res.json({
-      success: true,
-      message: 'Consultant request status updated successfully',
-      data: {
-        consultant: consultant.toJSON()
-      }
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Failed to update consultant request status'
-    });
-  }
-};
 
 /**
  * Delete consultant request (Admin only)
@@ -161,6 +127,5 @@ module.exports = {
   createConsultantRequest,
   getAllConsultantRequests,
   getConsultantRequestById,
-  updateConsultantRequestStatus,
   deleteConsultantRequest
 };

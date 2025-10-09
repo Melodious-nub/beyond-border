@@ -6,9 +6,9 @@ class Consultant {
     this.ngoName = data.ngoName;
     this.ngoRegistrationNumber = data.ngoRegistrationNumber;
     this.chairmanPresidentName = data.chairmanPresidentName;
-    this.specializedAreas = data.specializedAreas;
+    this.specializedAreas = data.specializedAreas ? JSON.parse(data.specializedAreas) : [];
     this.planningToExpand = data.planningToExpand;
-    this.expansionRegions = data.expansionRegions;
+    this.expansionRegions = data.expansionRegions ? JSON.parse(data.expansionRegions) : null;
     this.needFundingSupport = data.needFundingSupport;
     this.totalFundRequired = data.totalFundRequired;
     this.lookingForFundManager = data.lookingForFundManager;
@@ -52,8 +52,11 @@ class Consultant {
           needAssistance, emailAddress, websiteAddress, phoneNumber, status
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
-          ngoName, ngoRegistrationNumber, chairmanPresidentName, specializedAreas,
-          planningToExpand, expansionRegions, needFundingSupport, totalFundRequired,
+          ngoName, ngoRegistrationNumber, chairmanPresidentName, 
+          JSON.stringify(specializedAreas),
+          planningToExpand, 
+          expansionRegions ? JSON.stringify(expansionRegions) : null,
+          needFundingSupport, totalFundRequired,
           lookingForFundManager, openToSplittingInvestment, hasSpecializedTeam,
           needAssistance, emailAddress, websiteAddress, phoneNumber, 'new'
         ]
@@ -113,20 +116,6 @@ class Consultant {
     }
   }
 
-  // Update consultant status
-  async updateStatus(status) {
-    try {
-      await pool.execute(
-        'UPDATE consultants SET status = ?, updatedAt = CURRENT_TIMESTAMP WHERE id = ?',
-        [status, this.id]
-      );
-      
-      this.status = status;
-      return this;
-    } catch (error) {
-      throw error;
-    }
-  }
 
   // Delete consultant
   async delete() {

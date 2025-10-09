@@ -1001,7 +1001,7 @@ const options = {
         },
         ConsultantRequest: {
           type: 'object',
-          required: ['ngoName', 'chairmanPresidentName', 'specializedAreas', 'planningToExpand', 'needFundingSupport', 'lookingForFundManager', 'openToSplittingInvestment', 'hasSpecializedTeam', 'emailAddress', 'phoneNumber'],
+          required: ['ngoName', 'ngoRegistrationNumber', 'chairmanPresidentName', 'specializedAreas', 'planningToExpand', 'needFundingSupport', 'openToSplittingInvestment', 'hasSpecializedTeam', 'emailAddress', 'websiteAddress', 'phoneNumber'],
           properties: {
             ngoName: {
               type: 'string',
@@ -1014,6 +1014,7 @@ const options = {
               type: 'string',
               description: 'NGO registration number',
               example: 'REG-2024-001',
+              minLength: 2,
               maxLength: 100
             },
             chairmanPresidentName: {
@@ -1024,11 +1025,15 @@ const options = {
               maxLength: 255
             },
             specializedAreas: {
-              type: 'string',
+              type: 'array',
+              items: {
+                type: 'string',
+                minLength: 2,
+                maxLength: 100
+              },
               description: 'Specialized areas of operation',
-              example: 'Environmental conservation, climate resilience, sustainable agriculture',
-              minLength: 5,
-              maxLength: 1000
+              example: ['Environmental conservation', 'Climate resilience', 'Sustainable agriculture'],
+              minItems: 1
             },
             planningToExpand: {
               type: 'boolean',
@@ -1036,10 +1041,14 @@ const options = {
               example: true
             },
             expansionRegions: {
-              type: 'string',
-              description: 'Regions for expansion (if planning to expand)',
-              example: 'East Africa, South Asia',
-              maxLength: 500
+              type: 'array',
+              items: {
+                type: 'string',
+                minLength: 2,
+                maxLength: 100
+              },
+              description: 'Regions for expansion (required if planningToExpand is true)',
+              example: ['East Africa', 'South Asia']
             },
             needFundingSupport: {
               type: 'boolean',
@@ -1048,12 +1057,12 @@ const options = {
             },
             totalFundRequired: {
               type: 'number',
-              description: 'Total fund required in USD (if needs funding)',
+              description: 'Total fund required in USD (required if needFundingSupport is true)',
               example: 500000.00
             },
             lookingForFundManager: {
               type: 'boolean',
-              description: 'Whether looking for fund manager',
+              description: 'Whether looking for fund manager (required if needFundingSupport is true)',
               example: false
             },
             openToSplittingInvestment: {
@@ -1068,7 +1077,7 @@ const options = {
             },
             needAssistance: {
               type: 'boolean',
-              description: 'Whether needs assistance with proposals (if no specialized team)',
+              description: 'Whether needs assistance with proposals (required if hasSpecializedTeam is false)',
               example: true
             },
             emailAddress: {

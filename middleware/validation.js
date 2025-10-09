@@ -132,7 +132,7 @@ const validateBreadcrumbUpdate = [
     .withMessage('Page description cannot be empty')
 ];
 
-// Consultant request validation
+// Consultant request validation with conditional requirements
 const validateConsultantRequest = [
   body('ngoName')
     .trim()
@@ -142,10 +142,11 @@ const validateConsultantRequest = [
     .withMessage('NGO name is required'),
   
   body('ngoRegistrationNumber')
-    .optional()
     .trim()
-    .isLength({ max: 100 })
-    .withMessage('Registration number must not exceed 100 characters'),
+    .isLength({ min: 2, max: 100 })
+    .withMessage('Registration number must be between 2 and 100 characters')
+    .notEmpty()
+    .withMessage('Registration number is required'),
   
   body('chairmanPresidentName')
     .trim()
@@ -155,34 +156,64 @@ const validateConsultantRequest = [
     .withMessage('Chairman/President name is required'),
   
   body('specializedAreas')
+    .isArray({ min: 1 })
+    .withMessage('Specialized areas must be an array with at least one item'),
+  
+  body('specializedAreas.*')
     .trim()
-    .isLength({ min: 5, max: 1000 })
-    .withMessage('Specialized areas must be between 5 and 1000 characters')
-    .notEmpty()
-    .withMessage('Specialized areas are required'),
+    .isLength({ min: 2, max: 100 })
+    .withMessage('Each specialized area must be between 2 and 100 characters'),
   
   body('planningToExpand')
     .isBoolean()
     .withMessage('Planning to expand must be a boolean value'),
   
   body('expansionRegions')
+    .custom((value, { req }) => {
+      if (req.body.planningToExpand === true) {
+        if (!value || !Array.isArray(value) || value.length === 0) {
+          throw new Error('Expansion regions are required when planning to expand');
+        }
+        return true;
+      }
+      return true;
+    }),
+  
+  body('expansionRegions.*')
     .optional()
     .trim()
-    .isLength({ max: 500 })
-    .withMessage('Expansion regions must not exceed 500 characters'),
+    .isLength({ min: 2, max: 100 })
+    .withMessage('Each expansion region must be between 2 and 100 characters'),
   
   body('needFundingSupport')
     .isBoolean()
     .withMessage('Need funding support must be a boolean value'),
   
   body('totalFundRequired')
-    .optional()
-    .isDecimal({ decimal_digits: '0,2' })
-    .withMessage('Total fund required must be a valid decimal number'),
+    .custom((value, { req }) => {
+      if (req.body.needFundingSupport === true) {
+        if (value === undefined || value === null || value === '') {
+          throw new Error('Total fund required is mandatory when funding support is needed');
+        }
+        if (isNaN(value) || value < 0) {
+          throw new Error('Total fund required must be a valid positive number');
+        }
+      }
+      return true;
+    }),
   
   body('lookingForFundManager')
-    .isBoolean()
-    .withMessage('Looking for fund manager must be a boolean value'),
+    .custom((value, { req }) => {
+      if (req.body.needFundingSupport === true) {
+        if (value === undefined || value === null) {
+          throw new Error('Looking for fund manager is required when funding support is needed');
+        }
+        if (typeof value !== 'boolean') {
+          throw new Error('Looking for fund manager must be a boolean value');
+        }
+      }
+      return true;
+    }),
   
   body('openToSplittingInvestment')
     .isBoolean()
@@ -193,9 +224,17 @@ const validateConsultantRequest = [
     .withMessage('Has specialized team must be a boolean value'),
   
   body('needAssistance')
-    .optional()
-    .isBoolean()
-    .withMessage('Need assistance must be a boolean value'),
+    .custom((value, { req }) => {
+      if (req.body.hasSpecializedTeam === false) {
+        if (value === undefined || value === null) {
+          throw new Error('Need assistance is required when you do not have a specialized team');
+        }
+        if (typeof value !== 'boolean') {
+          throw new Error('Need assistance must be a boolean value');
+        }
+      }
+      return true;
+    }),
   
   body('emailAddress')
     .isEmail()
@@ -203,7 +242,6 @@ const validateConsultantRequest = [
     .normalizeEmail(),
   
   body('websiteAddress')
-    .optional()
     .isURL()
     .withMessage('Please provide a valid website URL'),
   

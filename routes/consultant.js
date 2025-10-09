@@ -107,51 +107,6 @@ router.get('/', authenticateToken, consultantController.getAllConsultantRequests
  */
 router.get('/:id', authenticateToken, consultantController.getConsultantRequestById);
 
-/**
- * @swagger
- * /api/consultants/{id}/status:
- *   put:
- *     summary: Update consultant request status (Admin only)
- *     tags: [Consultant Requests]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: Consultant request ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - status
- *             properties:
- *               status:
- *                 type: string
- *                 enum: [new, read, contacted, closed]
- *                 description: New status for the consultant request
- *     responses:
- *       200:
- *         description: Consultant request status updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ConsultantResponse'
- *       400:
- *         description: Validation failed
- *       401:
- *         description: Unauthorized
- *       404:
- *         description: Consultant request not found
- *       500:
- *         description: Server error
- */
-router.put('/:id/status', authenticateToken, consultantController.updateConsultantRequestStatus);
 
 /**
  * @swagger
