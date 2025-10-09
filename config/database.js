@@ -150,6 +150,36 @@ const initializeDatabase = async () => {
           )
         `);
 
+        // Create consultant_community table
+        await promisePool.execute(`
+          CREATE TABLE IF NOT EXISTS consultant_community (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            emailAddress VARCHAR(255) NOT NULL,
+            phoneNumber VARCHAR(20) NOT NULL,
+            linkedInProfile VARCHAR(500),
+            company VARCHAR(100) NOT NULL,
+            designation VARCHAR(100) NOT NULL,
+            yearsOfExperience INT NOT NULL,
+            areasOfExpertise JSON NOT NULL,
+            whyJoinCommunity TEXT NOT NULL,
+            howCanContribute TEXT NOT NULL,
+            email BOOLEAN NOT NULL,
+            whatsapp BOOLEAN NOT NULL,
+            slack BOOLEAN NOT NULL,
+            openToMentoring BOOLEAN NOT NULL,
+            agreement BOOLEAN NOT NULL,
+            status ENUM('new', 'reviewed', 'approved', 'rejected') DEFAULT 'new',
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_status (status),
+            INDEX idx_emailAddress (emailAddress),
+            INDEX idx_createdAt (createdAt),
+            INDEX idx_company (company),
+            INDEX idx_designation (designation)
+          )
+        `);
+
     console.log('✅ Database tables created successfully');
   } catch (error) {
     console.error('❌ Database initialization failed:', error.message);

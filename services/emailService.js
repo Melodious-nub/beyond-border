@@ -128,6 +128,48 @@ class EmailService {
     }
   }
 
+  // Send consultant community membership notification
+  async sendConsultantCommunityNotification(communityData) {
+    try {
+      if (!this.transporter) {
+        console.log('📧 Email service not configured, skipping notification');
+        return { success: false, message: 'Email service not configured' };
+      }
+
+      // Get notification emails from database
+      const notificationEmails = await this.getNotificationEmails();
+      
+      if (notificationEmails.length === 0) {
+        console.log('📧 No notification emails configured');
+        return { success: false, message: 'No notification emails configured' };
+      }
+
+      const mailOptions = {
+        from: `"${process.env.EMAIL_FROM_NAME || 'Beyond Border'}" <${process.env.EMAIL_USER}>`,
+        to: notificationEmails.join(', '),
+        subject: `New Consultant Community Membership Application - ${communityData.name}`,
+        html: this.generateConsultantCommunityEmailTemplate(communityData),
+        replyTo: communityData.emailAddress
+      };
+
+      const result = await this.transporter.sendMail(mailOptions);
+      console.log('📧 Consultant community notification sent successfully');
+      
+      return { 
+        success: true, 
+        message: 'Notification sent successfully',
+        messageId: result.messageId
+      };
+    } catch (error) {
+      console.error('📧 Failed to send consultant community notification:', error.message);
+      return { 
+        success: false, 
+        message: 'Failed to send notification',
+        error: error.message
+      };
+    }
+  }
+
   // Generate professional email template
   generateContactEmailTemplate(contactData) {
     const { name, email, description, createdAt } = contactData;
@@ -603,6 +645,323 @@ class EmailService {
             
             <div class="footer">
                 <p>This notification was sent from your Beyond Border website - Find your Consultant form.</p>
+                <p>To manage notification settings, please contact your system administrator.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+  }
+
+  // Generate consultant community membership email template
+  generateConsultantCommunityEmailTemplate(communityData) {
+    const {
+      name,
+      emailAddress,
+      phoneNumber,
+      linkedInProfile,
+      company,
+      designation,
+      yearsOfExperience,
+      areasOfExpertise,
+      whyJoinCommunity,
+      howCanContribute,
+      email,
+      whatsapp,
+      slack,
+      openToMentoring,
+      agreement
+    } = communityData;
+    
+    const currentDate = new Date().toLocaleString();
+    
+    // Helper function to format arrays
+    const formatArray = (arr) => {
+      if (!arr || !Array.isArray(arr)) return 'N/A';
+      return arr.map(item => `• ${item}`).join('<br>');
+    };
+    
+    // Helper function to format boolean values
+    const formatBoolean = (value) => {
+      return value ? 
+        '<span class="yes-no yes">Yes</span>' : 
+        '<span class="yes-no no">No</span>';
+    };
+    
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>New Consultant Community Membership Application</title>
+        <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                max-width: 100%;
+                margin: 0;
+                padding: 10px;
+                background-color: #f4f4f4;
+            }
+            .container {
+                background-color: #ffffff;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                max-width: 100%;
+            }
+            .header {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 20px 15px;
+                border-radius: 8px;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .header h1 {
+                margin: 0 0 10px 0;
+                font-size: 20px;
+                font-weight: 600;
+            }
+            .header p {
+                margin: 0;
+                font-size: 14px;
+                opacity: 0.9;
+            }
+            .section {
+                margin-bottom: 20px;
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            .section-header {
+                background-color: #f8f9fa;
+                padding: 12px 15px;
+                border-bottom: 1px solid #dee2e6;
+                font-weight: 600;
+                color: #495057;
+                font-size: 14px;
+            }
+            .section-content {
+                padding: 15px;
+            }
+            .field {
+                margin-bottom: 12px;
+                padding: 8px 0;
+                border-bottom: 1px solid #f1f3f4;
+            }
+            .field:last-child {
+                border-bottom: none;
+                margin-bottom: 0;
+            }
+            .field-label {
+                font-weight: 600;
+                color: #495057;
+                margin-bottom: 4px;
+                font-size: 13px;
+                display: block;
+                width: 100%;
+            }
+            .field-value {
+                color: #212529;
+                font-size: 14px;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+            .yes-no {
+                display: inline-block;
+                padding: 3px 8px;
+                border-radius: 12px;
+                font-weight: 600;
+                font-size: 11px;
+                text-transform: uppercase;
+                margin-top: 2px;
+            }
+            .yes {
+                background-color: #d4edda;
+                color: #155724;
+            }
+            .no {
+                background-color: #f8d7da;
+                color: #721c24;
+            }
+            .array-list {
+                margin: 4px 0;
+                line-height: 1.4;
+            }
+            .footer {
+                text-align: center;
+                padding: 15px;
+                background-color: #f8f9fa;
+                border-radius: 8px;
+                color: #6c757d;
+                font-size: 12px;
+                margin-top: 20px;
+            }
+            .timestamp {
+                background-color: #e3f2fd;
+                color: #1976d2;
+                padding: 8px;
+                border-radius: 4px;
+                text-align: center;
+                margin-top: 15px;
+                font-size: 12px;
+            }
+            .reply-info {
+                background-color: #fff3cd;
+                border: 1px solid #ffeaa7;
+                color: #856404;
+                padding: 12px;
+                border-radius: 6px;
+                margin-top: 15px;
+                font-size: 13px;
+            }
+            .experience-years {
+                font-size: 16px;
+                font-weight: 600;
+                color: #28a745;
+            }
+            
+            /* Mobile optimizations */
+            @media (max-width: 600px) {
+                body {
+                    padding: 5px;
+                }
+                .container {
+                    padding: 10px;
+                }
+                .header {
+                    padding: 15px 10px;
+                }
+                .header h1 {
+                    font-size: 18px;
+                }
+                .section-content {
+                    padding: 10px;
+                }
+                .field {
+                    margin-bottom: 10px;
+                }
+                .field-label {
+                    font-size: 12px;
+                }
+                .field-value {
+                    font-size: 13px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>👥 New Consultant Community Membership Application</h1>
+                <p>Professional Community Membership Request</p>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">A. Personal Information</div>
+                <div class="section-content">
+                    <div class="field">
+                        <div class="field-label">Full Name:</div>
+                        <div class="field-value"><strong>${name}</strong></div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Email Address:</div>
+                        <div class="field-value">${emailAddress}</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Phone Number:</div>
+                        <div class="field-value">${phoneNumber}</div>
+                    </div>
+                    ${linkedInProfile ? `
+                    <div class="field">
+                        <div class="field-label">LinkedIn Profile:</div>
+                        <div class="field-value">${linkedInProfile}</div>
+                    </div>
+                    ` : ''}
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">B. Professional Information</div>
+                <div class="section-content">
+                    <div class="field">
+                        <div class="field-label">Company:</div>
+                        <div class="field-value">${company}</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Designation/Title:</div>
+                        <div class="field-value">${designation}</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Years of Experience:</div>
+                        <div class="field-value experience-years">${yearsOfExperience} years</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Areas of Expertise:</div>
+                        <div class="field-value array-list">${formatArray(areasOfExpertise)}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">C. Community Engagement</div>
+                <div class="section-content">
+                    <div class="field">
+                        <div class="field-label">Why do you want to join this community?:</div>
+                        <div class="field-value">${whyJoinCommunity}</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">How can you contribute to the community?:</div>
+                        <div class="field-value">${howCanContribute}</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Open to mentoring others:</div>
+                        <div class="field-value">${formatBoolean(openToMentoring)}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">D. Communication Preferences</div>
+                <div class="section-content">
+                    <div class="field">
+                        <div class="field-label">Email Notifications:</div>
+                        <div class="field-value">${formatBoolean(email)}</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">WhatsApp:</div>
+                        <div class="field-value">${formatBoolean(whatsapp)}</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Slack:</div>
+                        <div class="field-value">${formatBoolean(slack)}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">E. Agreement</div>
+                <div class="section-content">
+                    <div class="field">
+                        <div class="field-label">Terms and Conditions Agreement:</div>
+                        <div class="field-value">${formatBoolean(agreement)}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="reply-info">
+                <strong>💡 Quick Reply:</strong> You can reply directly to this email to respond to ${name}.
+            </div>
+            
+            <div class="timestamp">
+                <strong>📅 Received:</strong> ${currentDate}
+            </div>
+            
+            <div class="footer">
+                <p>This notification was sent from your Beyond Border website - Consultant Community Membership form.</p>
                 <p>To manage notification settings, please contact your system administrator.</p>
             </div>
         </div>

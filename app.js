@@ -18,6 +18,7 @@ const pageRoutes = require('./routes/page');
 const breadcrumbRoutes = require('./routes/breadcrumb');
 const consultantRoutes = require('./routes/consultant');
 const teamRoutes = require('./routes/team');
+const consultantCommunityRoutes = require('./routes/consultantCommunity');
 
 // Create Express app
 const app = express();
@@ -117,6 +118,7 @@ app.use('/api/pages', pageRoutes);
 app.use('/api/breadcrumbs', breadcrumbRoutes);
 app.use('/api/consultants', consultantRoutes);
 app.use('/api/teams', teamRoutes);
+app.use('/api/consultant-community', consultantCommunityRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {
