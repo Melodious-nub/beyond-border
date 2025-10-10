@@ -14,20 +14,27 @@ class User {
 
   // Create a new user
   static async create(userData) {
+    const connection = await pool.getConnection();
     try {
+      await connection.beginTransaction();
+      
       const { fullName, email, password, role = 'admin' } = userData;
       
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 12);
       
-      const [result] = await pool.execute(
+      const [result] = await connection.execute(
         'INSERT INTO users (fullName, email, password, role) VALUES (?, ?, ?, ?)',
         [fullName, email, hashedPassword, role]
       );
       
+      await connection.commit();
       return result.insertId;
     } catch (error) {
+      await connection.rollback();
       throw error;
+    } finally {
+      connection.release();
     }
   }
 

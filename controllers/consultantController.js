@@ -1,5 +1,5 @@
 const Consultant = require('../models/Consultant');
-const EmailService = require('../services/EmailService');
+const EmailService = require('../services/emailService');
 
 /**
  * Create a new consultant request (Public)

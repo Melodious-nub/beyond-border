@@ -23,8 +23,22 @@ const consultantCommunityRoutes = require('./routes/consultantCommunity');
 // Create Express app
 const app = express();
 
-// Security middleware
-app.use(helmet());
+// Security middleware with CSP configuration for Swagger UI
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdnjs.cloudflare.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+      frameSrc: ["'none'"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: []
+    }
+  }
+}));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -101,13 +115,24 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
   explorer: true,
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'Beyond Border API Documentation',
+  customfavIcon: '/favicon.ico',
   swaggerOptions: {
     persistAuthorization: true,
     displayRequestDuration: true,
     filter: true,
     showExtensions: true,
-    showCommonExtensions: true
-  }
+    showCommonExtensions: true,
+    tryItOutEnabled: true,
+    supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
+    validatorUrl: null // Disable validator to avoid external requests
+  },
+  customJs: [
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.min.js'
+  ],
+  customCssUrl: [
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css'
+  ]
 }));
 
 // API routes

@@ -26,16 +26,7 @@ const register = async (req, res) => {
 
     const { fullName, email, password, role = 'admin' } = req.body;
 
-    // Check if user already exists
-    const existingUser = await User.findByEmail(email);
-    if (existingUser) {
-      return res.status(409).json({
-        success: false,
-        message: 'User with this email already exists'
-      });
-    }
-
-    // Create new user
+    // Create new user (let database handle uniqueness constraint)
     const userId = await User.create({
       fullName,
       email,
