@@ -29,6 +29,7 @@ class User {
       );
       
       await connection.commit();
+      
       return result.insertId;
     } catch (error) {
       await connection.rollback();

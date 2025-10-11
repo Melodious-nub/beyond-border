@@ -26,7 +26,16 @@ const register = async (req, res) => {
 
     const { fullName, email, password, role = 'admin' } = req.body;
 
-    // Create new user (let database handle uniqueness constraint)
+    // Check if user already exists first (for better error handling)
+    const existingUser = await User.findByEmail(email);
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        message: 'User with this email already exists'
+      });
+    }
+
+    // Create new user
     const userId = await User.create({
       fullName,
       email,
@@ -36,6 +45,13 @@ const register = async (req, res) => {
 
     // Get the created user (without password)
     const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(500).json({
+        success: false,
+        message: 'User creation failed'
+      });
+    }
 
     // Generate token
     const token = generateToken(userId);
@@ -49,8 +65,6 @@ const register = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Registration error:', error);
-    
     // Handle MySQL duplicate entry error
     if (error.code === 'ER_DUP_ENTRY') {
       return res.status(409).json({
