@@ -17,14 +17,14 @@ class EmailService {
       // You'll update this with your cPanel email credentials
       this.transporter = nodemailer.createTransport({
         host: process.env.EMAIL_HOST || 'localhost',
-        port: parseInt(process.env.EMAIL_PORT) || 587,
+        port: parseInt(process.env.EMAIL_PORT) || 465,
         secure: process.env.EMAIL_SECURE === 'true', // Use TLS (false) or SSL (true)
         auth: {
-          user: process.env.EMAIL_USER || '',
-          pass: process.env.EMAIL_PASS || ''
+          user: process.env.EMAIL_USER || 'noreply.bbc2025@gmail.com',
+          pass: process.env.EMAIL_PASS || 'dffsijxzxmuoenil'
         },
         tls: {
-          rejectUnauthorized: false
+          rejectUnauthorized: true
         }
       });
 
