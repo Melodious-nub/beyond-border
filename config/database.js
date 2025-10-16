@@ -180,6 +180,30 @@ const initializeDatabase = async () => {
           )
         `);
 
+        // Create why_choose_us table
+        await promisePool.execute(`
+          CREATE TABLE IF NOT EXISTS why_choose_us (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            details TEXT NOT NULL,
+            image VARCHAR(500),
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_createdAt (createdAt)
+          )
+        `);
+
+        // Create about_us table
+        await promisePool.execute(`
+          CREATE TABLE IF NOT EXISTS about_us (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            description TEXT NOT NULL,
+            image VARCHAR(500),
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+          )
+        `);
+
     console.log('✅ Database tables created successfully');
   } catch (error) {
     console.error('❌ Database initialization failed:', error.message);

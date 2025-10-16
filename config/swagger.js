@@ -1651,6 +1651,186 @@ const options = {
               }
             }
           }
+        },
+        WhyChooseUs: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              description: 'Why choose us item ID',
+              example: 1
+            },
+            title: {
+              type: 'string',
+              description: 'Title of the why choose us item',
+              example: 'Expert Team'
+            },
+            details: {
+              type: 'string',
+              description: 'Details/description of the why choose us item',
+              example: 'Our team consists of experienced professionals with years of expertise in their respective fields.'
+            },
+            image: {
+              type: 'string',
+              description: 'Image URL for the why choose us item',
+              example: 'http://localhost:3000/uploads/why-choose-us/why-choose-us-1234567890-123456789.jpg'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Creation timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Last update timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            }
+          }
+        },
+        WhyChooseUsResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Why choose us item retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                whyChooseUs: {
+                  $ref: '#/components/schemas/WhyChooseUs'
+                }
+              }
+            }
+          }
+        },
+        WhyChooseUsListResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Why choose us items retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                items: {
+                  type: 'array',
+                  items: {
+                    $ref: '#/components/schemas/WhyChooseUs'
+                  }
+                },
+                pagination: {
+                  type: 'object',
+                  properties: {
+                    page: {
+                      type: 'integer',
+                      example: 1
+                    },
+                    pageSize: {
+                      type: 'integer',
+                      example: 10
+                    },
+                    total: {
+                      type: 'integer',
+                      example: 25
+                    },
+                    pages: {
+                      type: 'integer',
+                      example: 3
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        WhyChooseUsPublicListResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Why choose us items retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                whyChooseUsItems: {
+                  type: 'array',
+                  items: {
+                    $ref: '#/components/schemas/WhyChooseUs'
+                  }
+                }
+              }
+            }
+          }
+        },
+        AboutUs: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              description: 'About us content ID',
+              example: 1
+            },
+            description: {
+              type: 'string',
+              description: 'About us description content',
+              example: 'Beyond Border Consultants is a multidisciplinary advisory firm dedicated to empowering NGOs, development agencies, and public-private partnerships through strategic consultancy services.'
+            },
+            image: {
+              type: 'string',
+              description: 'Image URL for the about us content',
+              example: 'http://localhost:3000/uploads/about-us/about-us-1234567890-123456789.jpg'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Creation timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Last update timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            }
+          }
+        },
+        AboutUsResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'About us content retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                aboutUs: {
+                  $ref: '#/components/schemas/AboutUs'
+                }
+              }
+            }
+          }
         }
       }
     },

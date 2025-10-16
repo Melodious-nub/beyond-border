@@ -19,6 +19,8 @@ const breadcrumbRoutes = require('./routes/breadcrumb');
 const consultantRoutes = require('./routes/consultant');
 const teamRoutes = require('./routes/team');
 const consultantCommunityRoutes = require('./routes/consultantCommunity');
+const whyChooseUsRoutes = require('./routes/whyChooseUs');
+const aboutUsRoutes = require('./routes/aboutUs');
 
 // Create Express app
 const app = express();
@@ -161,6 +163,8 @@ app.use('/api/breadcrumbs', breadcrumbRoutes);
 app.use('/api/consultants', consultantRoutes);
 app.use('/api/teams', teamRoutes);
 app.use('/api/consultant-community', consultantCommunityRoutes);
+app.use('/api/why-choose-us', whyChooseUsRoutes);
+app.use('/api/about-us', aboutUsRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

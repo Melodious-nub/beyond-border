@@ -297,6 +297,42 @@ const validateTeamMemberUpdate = [
     .withMessage('Designation must be between 2 and 100 characters')
 ];
 
+// Why Choose Us creation validation
+const validateWhyChooseUsCreation = [
+  body('title')
+    .trim()
+    .notEmpty()
+    .withMessage('Title is required'),
+  
+  body('details')
+    .trim()
+    .notEmpty()
+    .withMessage('Details are required')
+];
+
+// Why Choose Us update validation
+const validateWhyChooseUsUpdate = [
+  body('title')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Title cannot be empty'),
+  
+  body('details')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Details cannot be empty')
+];
+
+// About Us creation/update validation
+const validateAboutUsCreation = [
+  body('description')
+    .trim()
+    .notEmpty()
+    .withMessage('Description is required')
+];
+
 module.exports = {
   validateRegistration,
   validateLogin,
@@ -309,5 +345,8 @@ module.exports = {
   validateBreadcrumbUpdate,
   validateConsultantRequest,
   validateTeamMemberCreation,
-  validateTeamMemberUpdate
+  validateTeamMemberUpdate,
+  validateWhyChooseUsCreation,
+  validateWhyChooseUsUpdate,
+  validateAboutUsCreation
 };
