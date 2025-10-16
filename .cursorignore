@@ -7,6 +7,7 @@ logs
 
 # Environment variables (allow .env for development and git)
 # .env
+!.env
 
 # IDE files
 .vscode/
