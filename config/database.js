@@ -204,6 +204,22 @@ const initializeDatabase = async () => {
           )
         `);
 
+        // Create testimonials table
+        await promisePool.execute(`
+          CREATE TABLE IF NOT EXISTS testimonials (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            department VARCHAR(255),
+            designation VARCHAR(255),
+            description TEXT NOT NULL,
+            image VARCHAR(500),
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_name (name),
+            INDEX idx_createdAt (createdAt)
+          )
+        `);
+
     console.log('✅ Database tables created successfully');
   } catch (error) {
     console.error('❌ Database initialization failed:', error.message);

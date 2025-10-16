@@ -1831,6 +1831,143 @@ const options = {
               }
             }
           }
+        },
+        Testimonial: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              description: 'Testimonial ID',
+              example: 1
+            },
+            name: {
+              type: 'string',
+              description: 'Name of the person giving testimonial',
+              example: 'John Doe'
+            },
+            department: {
+              type: 'string',
+              description: 'Department of the person',
+              example: 'Engineering'
+            },
+            designation: {
+              type: 'string',
+              description: 'Designation of the person',
+              example: 'Senior Developer'
+            },
+            description: {
+              type: 'string',
+              description: 'Testimonial description/content',
+              example: 'This company has provided excellent service and support throughout our project.'
+            },
+            image: {
+              type: 'string',
+              description: 'Image URL for the testimonial',
+              example: 'http://localhost:3000/uploads/testimonials/testimonial-1234567890-123456789.jpg'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Creation timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Last update timestamp',
+              example: '2024-01-01T00:00:00.000Z'
+            }
+          }
+        },
+        TestimonialResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Testimonial retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                testimonial: {
+                  $ref: '#/components/schemas/Testimonial'
+                }
+              }
+            }
+          }
+        },
+        TestimonialListResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Testimonials retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                items: {
+                  type: 'array',
+                  items: {
+                    $ref: '#/components/schemas/Testimonial'
+                  }
+                },
+                pagination: {
+                  type: 'object',
+                  properties: {
+                    page: {
+                      type: 'integer',
+                      example: 1
+                    },
+                    pageSize: {
+                      type: 'integer',
+                      example: 10
+                    },
+                    total: {
+                      type: 'integer',
+                      example: 25
+                    },
+                    pages: {
+                      type: 'integer',
+                      example: 3
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        TestimonialPublicListResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Testimonials retrieved successfully'
+            },
+            data: {
+              type: 'object',
+              properties: {
+                testimonials: {
+                  type: 'array',
+                  items: {
+                    $ref: '#/components/schemas/Testimonial'
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },

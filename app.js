@@ -21,6 +21,7 @@ const teamRoutes = require('./routes/team');
 const consultantCommunityRoutes = require('./routes/consultantCommunity');
 const whyChooseUsRoutes = require('./routes/whyChooseUs');
 const aboutUsRoutes = require('./routes/aboutUs');
+const testimonialRoutes = require('./routes/testimonial');
 
 // Create Express app
 const app = express();
@@ -165,6 +166,7 @@ app.use('/api/teams', teamRoutes);
 app.use('/api/consultant-community', consultantCommunityRoutes);
 app.use('/api/why-choose-us', whyChooseUsRoutes);
 app.use('/api/about-us', aboutUsRoutes);
+app.use('/api/testimonials', testimonialRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

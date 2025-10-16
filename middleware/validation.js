@@ -333,6 +333,34 @@ const validateAboutUsCreation = [
     .withMessage('Description is required')
 ];
 
+// Testimonial creation validation
+const validateTestimonialCreation = [
+  body('name')
+    .trim()
+    .notEmpty()
+    .withMessage('Name is required'),
+  
+  body('description')
+    .trim()
+    .notEmpty()
+    .withMessage('Description is required')
+];
+
+// Testimonial update validation
+const validateTestimonialUpdate = [
+  body('name')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Name cannot be empty'),
+  
+  body('description')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Description cannot be empty')
+];
+
 module.exports = {
   validateRegistration,
   validateLogin,
@@ -348,5 +376,7 @@ module.exports = {
   validateTeamMemberUpdate,
   validateWhyChooseUsCreation,
   validateWhyChooseUsUpdate,
-  validateAboutUsCreation
+  validateAboutUsCreation,
+  validateTestimonialCreation,
+  validateTestimonialUpdate
 };
