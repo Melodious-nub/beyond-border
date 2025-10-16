@@ -59,8 +59,7 @@ class WhyChooseUs {
       
       // Get paginated results
       const [rows] = await pool.execute(
-        'SELECT * FROM why_choose_us ORDER BY createdAt DESC LIMIT ? OFFSET ?',
-        [pageSize, offset]
+        `SELECT * FROM why_choose_us ORDER BY createdAt DESC LIMIT ${pageSize} OFFSET ${offset}`
       );
       
       const items = rows.map(row => new WhyChooseUs(row));
