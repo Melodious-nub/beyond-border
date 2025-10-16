@@ -7,6 +7,9 @@ require('dotenv').config();
 // Import database configuration
 const { testConnection, initializeDatabase } = require('./config/database');
 
+// Import upload utilities
+const { ensureAllUploadDirectories } = require('./utils/uploadUtils');
+
 // Import Swagger configuration
 const { swaggerUi, specs } = require('./config/swagger');
 
@@ -206,6 +209,9 @@ app.use((error, req, res, next) => {
 // Initialize database and start server
 const startServer = async () => {
   try {
+    // Ensure all upload directories exist
+    ensureAllUploadDirectories();
+    
     // Test database connection
     await testConnection();
     

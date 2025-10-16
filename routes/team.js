@@ -1,33 +1,10 @@
 const express = require('express');
-const multer = require('multer');
-const path = require('path');
+const { ensureUploadDirectory, createMulterStorage, UPLOAD_DIRECTORIES } = require('../utils/uploadUtils');
 const router = express.Router();
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/avatars/'); // Make sure this directory exists
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'avatar-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 500 * 1024, // 500KB limit
-  },
-  fileFilter: function (req, file, cb) {
-    // Accept only image files
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only image files are allowed!'), false);
-    }
-  }
-});
+// Ensure upload directory exists and create multer configuration
+const uploadDir = ensureUploadDirectory(UPLOAD_DIRECTORIES.AVATARS);
+const upload = createMulterStorage(uploadDir, 'avatar', 500 * 1024); // 500KB limit
 
 // Import controllers
 const {
