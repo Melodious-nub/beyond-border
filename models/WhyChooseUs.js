@@ -97,15 +97,25 @@ class WhyChooseUs {
     try {
       const { title, details, image } = updateData;
       
-      await pool.execute(
-        'UPDATE why_choose_us SET title = ?, details = ?, image = ?, updatedAt = CURRENT_TIMESTAMP WHERE id = ?',
-        [title, details, image, this.id]
-      );
+      let query = 'UPDATE why_choose_us SET title = ?, details = ?, updatedAt = CURRENT_TIMESTAMP';
+      let params = [title, details];
+
+      if (image !== undefined) {
+        query += ', image = ?';
+        params.push(image);
+      }
+
+      query += ' WHERE id = ?';
+      params.push(this.id);
+
+      await pool.execute(query, params);
 
       // Update local instance
       this.title = title;
       this.details = details;
-      this.image = image;
+      if (image !== undefined) {
+        this.image = image;
+      }
       return this;
     } catch (error) {
       throw error;

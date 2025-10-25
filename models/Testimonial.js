@@ -99,17 +99,27 @@ class Testimonial {
     try {
       const { name, department, designation, description, image } = updateData;
       
-      await pool.execute(
-        'UPDATE testimonials SET name = ?, department = ?, designation = ?, description = ?, image = ?, updatedAt = CURRENT_TIMESTAMP WHERE id = ?',
-        [name, department, designation, description, image, this.id]
-      );
+      let query = 'UPDATE testimonials SET name = ?, department = ?, designation = ?, description = ?, updatedAt = CURRENT_TIMESTAMP';
+      let params = [name, department, designation, description];
+
+      if (image !== undefined) {
+        query += ', image = ?';
+        params.push(image);
+      }
+
+      query += ' WHERE id = ?';
+      params.push(this.id);
+
+      await pool.execute(query, params);
 
       // Update local instance
       this.name = name;
       this.department = department;
       this.designation = designation;
       this.description = description;
-      this.image = image;
+      if (image !== undefined) {
+        this.image = image;
+      }
       return this;
     } catch (error) {
       throw error;
