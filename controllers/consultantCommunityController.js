@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const ConsultantCommunity = require('../models/ConsultantCommunity');
 const emailService = require('../services/emailService');
+const eventEmitter = require('../services/eventEmitter');
 
 // Submit consultant community membership form (Public)
 const submitConsultantCommunity = async (req, res) => {
@@ -72,6 +73,9 @@ const submitConsultantCommunity = async (req, res) => {
         consultantCommunity: consultantCommunity.toJSON()
       }
     });
+
+    // Emit event for notification system (non-blocking)
+    eventEmitter.emit('community:created', consultantCommunity.toJSON());
   } catch (error) {
     console.error('Consultant community submission error:', error);
     res.status(500).json({

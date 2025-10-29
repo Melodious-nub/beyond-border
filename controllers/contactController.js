@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const Contact = require('../models/Contact');
 const emailService = require('../services/emailService');
+const eventEmitter = require('../services/eventEmitter');
 
 // Submit contact form (Public)
 const submitContact = async (req, res) => {
@@ -44,6 +45,9 @@ const submitContact = async (req, res) => {
         contact: contact.toJSON()
       }
     });
+
+    // Emit event for notification system (non-blocking)
+    eventEmitter.emit('contact:created', contact.toJSON());
   } catch (error) {
     console.error('Contact submission error:', error);
     res.status(500).json({

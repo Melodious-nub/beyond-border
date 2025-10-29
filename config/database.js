@@ -220,6 +220,24 @@ const initializeDatabase = async () => {
           )
         `);
 
+        // Create notifications table
+        await promisePool.execute(`
+          CREATE TABLE IF NOT EXISTS notifications (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            message TEXT NOT NULL,
+            route VARCHAR(255) NOT NULL,
+            targetRoute VARCHAR(255) NOT NULL,
+            referenceId INT NOT NULL,
+            type ENUM('contact', 'consultant', 'community') NOT NULL,
+            isRead BOOLEAN DEFAULT FALSE,
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_isRead (isRead),
+            INDEX idx_type (type),
+            INDEX idx_createdAt (createdAt)
+          )
+        `);
+
     console.log('✅ Database tables created successfully');
   } catch (error) {
     console.error('❌ Database initialization failed:', error.message);

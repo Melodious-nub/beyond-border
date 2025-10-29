@@ -1,22 +1,233 @@
 const express = require('express');
 const router = express.Router();
-const notificationController = require('../controllers/notificationController');
+const { body } = require('express-validator');
 const { authenticateToken } = require('../middleware/auth');
+const {
+  getNotifications,
+  getUnreadCount,
+  markAsRead,
+  markAllAsRead,
+  deleteNotification,
+  notificationStream,
+  getConnectionStats,
+  addNotificationEmail,
+  getAllNotificationEmails,
+  deleteNotificationEmail,
+  testEmailConfiguration,
+  sendCustomNotification
+} = require('../controllers/notificationController');
 
 /**
  * @swagger
  * tags:
- *   name: Notification Management
- *   description: Notification email management system for receiving alerts from various forms and system events
+ *   name: Notifications
+ *   description: Real-time notification management endpoints
  */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Notification:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: Notification ID
+ *           example: 1
+ *         title:
+ *           type: string
+ *           description: Notification title
+ *           example: "New Contact Inquiry"
+ *         message:
+ *           type: string
+ *           description: Notification message
+ *           example: "John Doe submitted a contact inquiry"
+ *         route:
+ *           type: string
+ *           description: Source API route
+ *           example: "/api/contact"
+ *         targetRoute:
+ *           type: string
+ *           description: Frontend route to navigate
+ *           example: "/admin/contact-responses"
+ *         referenceId:
+ *           type: integer
+ *           description: Reference ID of the related entity
+ *           example: 5
+ *         type:
+ *           type: string
+ *           enum: [contact, consultant, community]
+ *           description: Notification type
+ *           example: "contact"
+ *         isRead:
+ *           type: boolean
+ *           description: Read status
+ *           example: false
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: Creation timestamp
+ *           example: "2024-01-01T00:00:00.000Z"
+ */
+
+/**
+ * @swagger
+ * /api/notifications:
+ *   get:
+ *     summary: Get all notifications with pagination
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         description: Number of items per page
+ *       - in: query
+ *         name: unreadOnly
+ *         schema:
+ *           type: boolean
+ *           default: false
+ *         description: Get only unread notifications
+ *     responses:
+ *       200:
+ *         description: Notifications retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ */
+router.get('/', authenticateToken, getNotifications);
+
+/**
+ * @swagger
+ * /api/notifications/unread-count:
+ *   get:
+ *     summary: Get count of unread notifications
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Unread count retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ */
+router.get('/unread-count', authenticateToken, getUnreadCount);
+
+/**
+ * @swagger
+ * /api/notifications/stream:
+ *   get:
+ *     summary: SSE stream for real-time notifications
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: SSE connection established
+ *       401:
+ *         description: Unauthorized
+ */
+router.get('/stream', authenticateToken, notificationStream);
+
+/**
+ * @swagger
+ * /api/notifications/stats:
+ *   get:
+ *     summary: Get SSE connection statistics
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Connection stats retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ */
+router.get('/stats', authenticateToken, getConnectionStats);
+
+/**
+ * @swagger
+ * /api/notifications/{id}/read:
+ *   patch:
+ *     summary: Mark notification as read
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Notification ID
+ *     responses:
+ *       200:
+ *         description: Notification marked as read
+ *       404:
+ *         description: Notification not found
+ *       401:
+ *         description: Unauthorized
+ */
+router.patch('/:id/read', authenticateToken, markAsRead);
+
+/**
+ * @swagger
+ * /api/notifications/mark-all-read:
+ *   patch:
+ *     summary: Mark all notifications as read
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: All notifications marked as read
+ *       401:
+ *         description: Unauthorized
+ */
+router.patch('/mark-all-read', authenticateToken, markAllAsRead);
+
+/**
+ * @swagger
+ * /api/notifications/{id}:
+ *   delete:
+ *     summary: Delete notification
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Notification ID
+ *     responses:
+ *       200:
+ *         description: Notification deleted successfully
+ *       404:
+ *         description: Notification not found
+ *       401:
+ *         description: Unauthorized
+ */
+router.delete('/:id', authenticateToken, deleteNotification);
+
+// ==================== EMAIL NOTIFICATION MANAGEMENT ROUTES ====================
 
 /**
  * @swagger
  * /api/notifications/emails:
  *   post:
- *     summary: Add notification email (Admin only)
- *     description: Add an email address to receive notifications from contact forms, system events, and other automated processes
- *     tags: [Notification Management]
+ *     summary: Add notification email address
+ *     tags: [Notifications]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -31,99 +242,43 @@ const { authenticateToken } = require('../middleware/auth');
  *               email:
  *                 type: string
  *                 format: email
- *                 description: Email address to receive notifications
- *                 example: "admin@example.com"
+ *                 description: Email address to add
+ *                 example: admin@example.com
  *     responses:
  *       201:
  *         description: Notification email added successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/NotificationEmailResponse'
- *             example:
- *               success: true
- *               message: "Notification email added successfully"
- *               data:
- *                 notificationEmail:
- *                   id: 1
- *                   email: "admin@example.com"
- *                   createdAt: "2024-01-01T00:00:00.000Z"
- *       400:
- *         description: Validation failed
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       401:
- *         description: Unauthorized - Invalid or missing token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
  *       409:
  *         description: Email already exists
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         description: Unauthorized
  */
-router.post('/emails', authenticateToken, notificationController.addNotificationEmail);
+router.post('/emails', [
+  authenticateToken,
+  body('email').isEmail().normalizeEmail().withMessage('Please provide a valid email address')
+], addNotificationEmail);
 
 /**
  * @swagger
  * /api/notifications/emails:
  *   get:
- *     summary: List all notification emails (Admin only)
- *     description: Retrieve all email addresses configured to receive notifications
- *     tags: [Notification Management]
+ *     summary: Get all notification email addresses
+ *     tags: [Notifications]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Notification emails retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/NotificationEmailListResponse'
- *             example:
- *               success: true
- *               message: "Notification emails retrieved successfully"
- *               data:
- *                 notificationEmails:
- *                   - id: 1
- *                     email: "admin@example.com"
- *                     createdAt: "2024-01-01T00:00:00.000Z"
- *                   - id: 2
- *                     email: "support@example.com"
- *                     createdAt: "2024-01-01T01:00:00.000Z"
+ *         description: List of notification emails
  *       401:
- *         description: Unauthorized - Invalid or missing token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *         description: Unauthorized
  */
-router.get('/emails', authenticateToken, notificationController.listNotificationEmails);
+router.get('/emails', authenticateToken, getAllNotificationEmails);
 
 /**
  * @swagger
  * /api/notifications/emails/{email}:
  *   delete:
- *     summary: Delete notification email (Admin only)
- *     description: Remove an email address from the notification list
- *     tags: [Notification Management]
+ *     summary: Delete notification email address
+ *     tags: [Notifications]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -132,93 +287,41 @@ router.get('/emails', authenticateToken, notificationController.listNotification
  *         required: true
  *         schema:
  *           type: string
- *           format: email
- *         description: Email address to remove from notifications
- *         example: "admin@example.com"
+ *         description: Email address to delete
  *     responses:
  *       200:
  *         description: Notification email deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: "Notification email deleted successfully"
- *       401:
- *         description: Unauthorized - Invalid or missing token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
  *       404:
- *         description: Notification email not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *         description: Email not found
+ *       401:
+ *         description: Unauthorized
  */
-router.delete('/emails/:email', authenticateToken, notificationController.deleteNotificationEmail);
+router.delete('/emails/:email', authenticateToken, deleteNotificationEmail);
 
 /**
  * @swagger
  * /api/notifications/test-email:
  *   post:
- *     summary: Test email configuration (Admin only)
- *     description: Send a test email to verify email service configuration and notification delivery
- *     tags: [Notification Management]
+ *     summary: Test email configuration
+ *     tags: [Notifications]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Test email sent successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/EmailTestResponse'
- *             example:
- *               success: true
- *               message: "Test email sent successfully"
- *               data:
- *                 messageId: "<test-message-id@example.com>"
- *       400:
- *         description: Email configuration error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       401:
- *         description: Unauthorized - Invalid or missing token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
  *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *         description: Email configuration error
+ *       401:
+ *         description: Unauthorized
  */
-router.post('/test-email', authenticateToken, notificationController.testEmailConfiguration);
+router.post('/test-email', authenticateToken, testEmailConfiguration);
 
 /**
  * @swagger
  * /api/notifications/send:
  *   post:
- *     summary: Send notification to all configured emails (Admin only)
- *     description: Send a custom notification message to all configured notification emails
- *     tags: [Notification Management]
+ *     summary: Send custom notification to all notification emails
+ *     tags: [Notifications]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -233,58 +336,24 @@ router.post('/test-email', authenticateToken, notificationController.testEmailCo
  *             properties:
  *               subject:
  *                 type: string
- *                 description: Email subject line
- *                 example: "System Alert"
- *                 minLength: 1
- *                 maxLength: 200
+ *                 description: Email subject
+ *                 example: System Maintenance Alert
  *               message:
  *                 type: string
- *                 description: Email message content
- *                 example: "This is a system notification message."
- *                 minLength: 1
- *                 maxLength: 2000
+ *                 description: Email message
+ *                 example: Scheduled maintenance will begin at 2:00 AM UTC
  *     responses:
  *       200:
  *         description: Notification sent successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: "Notification sent to 3 email addresses"
- *                 data:
- *                   type: object
- *                   properties:
- *                     sentCount:
- *                       type: integer
- *                       example: 3
- *                     failedCount:
- *                       type: integer
- *                       example: 0
  *       400:
- *         description: Validation failed
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *         description: No notification emails configured
  *       401:
- *         description: Unauthorized - Invalid or missing token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *         description: Unauthorized
  */
-router.post('/send', authenticateToken, notificationController.sendNotification);
+router.post('/send', [
+  authenticateToken,
+  body('subject').notEmpty().withMessage('Subject is required'),
+  body('message').notEmpty().withMessage('Message is required')
+], sendCustomNotification);
 
 module.exports = router;

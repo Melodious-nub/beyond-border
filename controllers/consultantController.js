@@ -1,5 +1,6 @@
 const Consultant = require('../models/Consultant');
 const EmailService = require('../services/emailService');
+const eventEmitter = require('../services/eventEmitter');
 
 /**
  * Create a new consultant request (Public)
@@ -27,6 +28,9 @@ const createConsultantRequest = async (req, res) => {
         consultant: consultant.toJSON()
       }
     });
+
+    // Emit event for notification system (non-blocking)
+    eventEmitter.emit('consultant:created', consultant.toJSON());
   } catch (error) {
     res.status(500).json({
       success: false,
