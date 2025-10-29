@@ -110,12 +110,19 @@ class NotificationService {
     // Remove existing connection for this user if any
     this.removeClient(userId);
     
-    // Setup SSE headers
+    // Get origin from request for CORS (supports both dev and production)
+    const origin = res.req.headers.origin || 'https://beyond-border.org';
+    
+    // Setup SSE headers with CORS for cross-origin requests
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
       'Connection': 'keep-alive',
-      'X-Accel-Buffering': 'no' // Disable nginx buffering
+      'X-Accel-Buffering': 'no', // Disable nginx buffering
+      'Access-Control-Allow-Origin': origin, // Dynamic CORS origin
+      'Access-Control-Allow-Credentials': 'true', // Allow credentials
+      'Access-Control-Allow-Headers': 'Authorization, Content-Type, Accept', // Allowed headers
+      'Access-Control-Expose-Headers': 'Content-Type' // Expose headers
     });
 
     // Store connection
