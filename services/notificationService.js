@@ -113,37 +113,52 @@ class NotificationService {
     // Get origin from request for CORS (supports both dev and production)
     const origin = res.req.headers.origin || 'https://beyond-border.org';
     
-    // Setup SSE headers with CORS for cross-origin requests
+    // Setup SSE headers optimized for LiteSpeed/cPanel shared hosting
     res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
+      'Content-Type': 'text/event-stream; charset=utf-8',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
       'Connection': 'keep-alive',
-      'X-Accel-Buffering': 'no', // Disable nginx buffering
+      'Keep-Alive': 'timeout=300, max=100', // 5 minute timeout for shared hosting
+      'X-Accel-Buffering': 'no', // Disable nginx/LiteSpeed buffering
+      'Transfer-Encoding': 'chunked', // Enable chunked transfer for streaming
       'Access-Control-Allow-Origin': origin, // Dynamic CORS origin
       'Access-Control-Allow-Credentials': 'true', // Allow credentials
-      'Access-Control-Allow-Headers': 'Authorization, Content-Type, Accept', // Allowed headers
-      'Access-Control-Expose-Headers': 'Content-Type' // Expose headers
+      'Access-Control-Allow-Headers': 'Authorization, Content-Type, Accept, Origin', // Allowed headers
+      'Access-Control-Expose-Headers': 'Content-Type, Cache-Control' // Expose headers
     });
 
-    // Store connection
+    // Store connection with metadata
+    const connectionTime = Date.now();
     this.connections.set(userId, {
       response: res,
-      lastHeartbeat: Date.now()
+      lastHeartbeat: connectionTime,
+      connectedAt: connectionTime
     });
 
     console.log(`📡 SSE client connected: User ${userId} (Total connections: ${this.connections.size})`);
+    console.log(`📊 Connection details: Origin=${origin}, UserAgent=${res.req.headers['user-agent']?.substring(0, 50)}...`);
 
     // Send initial connection confirmation
     this.sendToClient(userId, {
       type: 'connected',
-      message: 'SSE connection established',
+      message: 'SSE connection established successfully',
       timestamp: new Date().toISOString()
     });
 
     // Handle client disconnect
     res.on('close', () => {
+      const connection = this.connections.get(userId);
+      const duration = connection ? Math.round((Date.now() - connection.connectedAt) / 1000) : 0;
       this.removeClient(userId);
-      console.log(`📡 SSE client disconnected: User ${userId}`);
+      console.log(`📡 SSE client disconnected: User ${userId} (Connected for ${duration}s, Remaining: ${this.connections.size})`);
+    });
+
+    // Handle connection errors
+    res.on('error', (error) => {
+      console.error(`❌ SSE connection error for user ${userId}:`, error.message);
+      this.removeClient(userId);
     });
   }
 
